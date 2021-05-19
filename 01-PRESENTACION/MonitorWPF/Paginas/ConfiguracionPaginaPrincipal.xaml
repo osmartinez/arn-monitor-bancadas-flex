@@ -1,0 +1,59 @@
+﻿<Page x:Class="MonitorWPF.Paginas.ConfiguracionPaginaPrincipal"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:MonitorWPF.Paginas"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="ConfiguracionPaginaPrincipal">
+
+    <Grid Background="White" Margin="1">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0" Text="CARGAR CONFIG" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="25"></TextBlock>
+        <TextBlock Grid.Row="1" Text="MODO" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="25"></TextBlock>
+        <TextBlock Grid.Row="2" Text="PANTALLAS" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="25"></TextBlock>
+        <TextBlock Grid.Row="3" Text="PANTALLA ACTUAL" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="25"></TextBlock>
+        <TextBlock Grid.Row="4" Text="MAQUINAS" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="25"></TextBlock>
+
+        <ComboBox Name="CmbConfig" ItemsSource="{Binding Configuraciones}" SelectedIndex="0" DisplayMemberPath="Modo" Grid.Row="0" Grid.Column="1" Height="60" FontSize="25" VerticalContentAlignment="Center"></ComboBox>
+        <ComboBox Name="CmbModos" ItemsSource="{Binding Modos}" SelectedIndex="0" Grid.Row="1" Grid.Column="1" Height="60" FontSize="25" VerticalContentAlignment="Center"></ComboBox>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding NumPantallas, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Height="70" FontSize="25" VerticalContentAlignment="Center"></TextBox>
+        <ComboBox Name="CmbPantallas" SelectionChanged="CmbPantallas_SelectionChanged" ItemsSource="{Binding Pantallas}"  DisplayMemberPath="Id" Grid.Row="3" Grid.Column="1" Height="60" FontSize="25" VerticalContentAlignment="Center"></ComboBox>
+
+        <Grid Grid.Row="4" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <ComboBox Name="CmbMaquinas" ItemsSource="{Binding Maquinas}" SelectedIndex="0" DisplayMemberPath="Nombre" Grid.Row="0" Grid.Column="0" Height="60" FontSize="25" VerticalContentAlignment="Center"></ComboBox>
+            <Button Name="BtAddMaquina" Click="BtAddMaquina_Click" Grid.Column="1" Height="60" Style="{StaticResource BotonConfirmarLogin}">+</Button>
+        </Grid>
+
+        <DataGrid Name="TablaMaquinas" AutoGenerateColumns="false" IsReadOnly="True" ItemsSource="{Binding MaquinasSeleccionadas}" Grid.Column="2" Grid.RowSpan="5" Margin="2">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Nombre}">
+                    <DataGridTextColumn.Header>
+                        <TextBlock FontSize="20" Text="MAQUINA"></TextBlock>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Button Name="BtGuardar" Click="BtGuardar_Click" Grid.Row="5"  Grid.Column="2" Style="{StaticResource BotonConfirmarLogin}">OK</Button>
+        <Button Name="BtSalir" Click="BtSalir_Click" Grid.Row="5" Grid.Column="0" Style="{StaticResource BotonBorrarLogin}">CANCELAR</Button>
+    </Grid>
+</Page>

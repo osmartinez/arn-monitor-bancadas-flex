@@ -1,0 +1,24 @@
+﻿<Page x:Class="MonitorWPF.Paginas.BienvenidaAplicacionPaginaPrincipal"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:MonitorWPF.Paginas"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="BienvenidaAplicacionPaginaPrincipal">
+
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Image Source="/MonitorWPF;component/Recursos/logo.png" Width="500"  RenderOptions.BitmapScalingMode="Fant"
+       Stretch="Fill"/>
+        <TextBlock Text="Por favor, espere..." Foreground="Black" FontSize="45" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+        <ProgressBar IsIndeterminate="True" Grid.Row="2" Width="600" Height="70"/>
+        <TextBlock Text="{Binding Version}" Foreground="Black" FontSize="25" Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+    </Grid>
+</Page>
