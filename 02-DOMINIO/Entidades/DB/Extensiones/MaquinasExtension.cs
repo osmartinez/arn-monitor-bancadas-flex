@@ -309,8 +309,24 @@ namespace Entidades.DB
         }
 
         public ModoMaquina Modo { get; set; } = ModoMaquina.Normal;
+        public string Tipo
+        {
+            get
+            {
+                if (this.Nombre.Contains("PEGADO"))
+                {
+                    return "pegado";
+                }
+                else
+                {
+                    return "moldeado";
+                }
+            }
+        }
 
         public List<PulsoMaquina> Pulsos { get; private set; } = new List<PulsoMaquina>();
+
+        public virtual Operarios OperarioACargo { get; set; }
 
         public void CambiarModo(ModoMaquina modo)
         {

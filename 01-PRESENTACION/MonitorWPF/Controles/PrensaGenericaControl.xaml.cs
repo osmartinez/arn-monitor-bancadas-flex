@@ -1,5 +1,12 @@
 ﻿using Almacenamiento.Implementaciones;
+using Almacenamiento.Interfaces;
 using Entidades.DB;
+using Entidades.DTO;
+using Entidades.Enum;
+using Entidades.Util;
+using Horario;
+using MqttServicio;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,11 +31,17 @@ namespace MonitorWPF.Controles
     /// </summary>
     public partial class PrensaGenericaControl : UserControl, INotifyPropertyChanged
     {
+        private IDaoPuesto daoPuesto = new DaoPuesto();
+        private IDaoTarea daoTarea = new DaoTarea();
+
         public Maquinas Maquina { get; set; }
         private DispatcherTimer timerCalentamiento;
         private DispatcherTimer timerInactividad;
         private DispatcherTimer timerLimiteCaja;
         private bool inactiva = false;
+        private Topic topicNormal;
+        private Topic topicCalentar;
+        private Topic topicAsociarTarea;
 
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -51,11 +64,12 @@ namespace MonitorWPF.Controles
             InitializeComponent();
             this.DataContext = this;
         }
-        public PrensaGenericaControl(Maquinas maquina)
+        public PrensaGenericaControl(Maquinas maquina,Operarios op)
         {
             InitializeComponent();
             this.DataContext = this;
             this.Maquina = maquina;
+            this.Maquina.OperarioACargo = op;
             this.MinHeight = 30;
             Grid.SetRow(this, (int)maquina.Top);
             Grid.SetColumn(this, (int)maquina.Left);
@@ -76,6 +90,147 @@ namespace MonitorWPF.Controles
 
             this.timerLimiteCaja.Start();
             this.timerInactividad.Start();
+
+            this.topicNormal = new Topic(string.Format("/{0}/plc/{1}/normal",maquina.Tipo,maquina.IpAutomata),(byte)2);
+            this.topicNormal.OnMensajeRecibido += TopicNormal_OnMensajeRecibido;
+            this.topicCalentar = new Topic(string.Format("/{0}/plc/{1}/calentar", maquina.Tipo, maquina.IpAutomata), (byte)1);
+            this.topicCalentar.OnMensajeRecibido += TopicCalentar_OnMensajeRecibido;
+            this.topicAsociarTarea = new Topic(string.Format("/{0}/plc/{1}/asociarTarea", maquina.Tipo, maquina.IpAutomata), (byte)1);
+            this.topicAsociarTarea.OnMensajeRecibido += TopicAsociarTarea_OnMensajeRecibido;
+            
+            try
+            {
+                BackgroundWorker bwActualizarCola = new BackgroundWorker();
+                List<MaquinasColasTrabajo> cola = new List<MaquinasColasTrabajo>();
+                List<MaquinasRegistrosDatos> paquetesHistorico = new List<MaquinasRegistrosDatos>();
+                DateTime ahora = DateTime.Now;
+                Turno turno = HorarioTurnos.CalcularTurnoAFecha(ahora);
+                DateTime fechaInicio;
+                DateTime fechaFin;
+                HorarioTurnos.CalcularHorarioTurno(turno, ahora, out fechaInicio, out fechaFin);
+
+                bwActualizarCola.DoWork += (se, ev) =>
+                {
+                    cola = daoPuesto.ObtenerColaTrabajoMaquina(maquina.ID);
+                    paquetesHistorico = daoTarea.ObtenerHistoricoParesOperario(op.Id, maquina.IpAutomata, maquina.Posicion, fechaInicio, fechaFin);
+                };
+                bwActualizarCola.RunWorkerCompleted += (se, ev) =>
+                {
+                    maquina.AsignarColaTrabajo(cola);
+
+                    ClienteMqtt.Suscribir(this.topicNormal);
+                    ClienteMqtt.Suscribir(this.topicCalentar);
+                    ClienteMqtt.Suscribir(this.topicAsociarTarea);
+
+                    foreach(var paquete in paquetesHistorico.Where(x=>x.PiezaIntroducida))
+                    {
+                        Maquina.Pulsos.Add(new PulsoMaquina
+                        {
+                            CodigoEtiqueta = paquete.CodigoEtiqueta,
+                            Control = daoTarea.BuscarControlGuardado(paquete.IdOperacion, Maquina.IdTipo??0),
+                            Ciclo = paquete.Ciclo,
+                            Fecha = paquete.FechaCreacion,
+                            Pares = paquete.Pares,
+                            PosicionGlobal = Maquina.PosicionGlobal ?? 0,
+                            IdOperario = paquete.IdOperario,
+                        });
+                    }
+                };
+                bwActualizarCola.RunWorkerAsync();
+
+               
+            }
+            catch (Exception ex)
+            {
+                new Log().Escribir(ex);
+            }
+
+        }
+
+        private void TopicCalentar_OnMensajeRecibido(object sender, Entidades.Eventos.MqttMensajeRecibidoEventArgs e)
+        {
+            timerCalentamiento.Start();
+        }
+
+        private void TopicAsociarTarea_OnMensajeRecibido(object sender, Entidades.Eventos.MqttMensajeRecibidoEventArgs e)
+        {
+            
+        }
+
+        private void TopicNormal_OnMensajeRecibido(object sender, Entidades.Eventos.MqttMensajeRecibidoEventArgs e)
+        {
+            timerCalentamiento.Stop();
+            try
+            {
+                ConsumoPrensa consumo = JsonConvert.DeserializeObject<ConsumoPrensa>(e.Cuerpo);
+                if (consumo == null)
+                {
+                    new Log().Escribir("consumo nulo");
+                }
+
+                if(consumo.Prensa != this.Maquina.Posicion)
+                {
+                    return;
+                }
+
+                if (this.Maquina.Modo != Entidades.Enum.ModoMaquina.Normal)
+                {
+                    this.Maquina.CambiarModo(Entidades.Enum.ModoMaquina.Normal);
+                }
+
+                this.Maquina.CargarInformacion(consumo);
+
+                if (this.Maquina.TrabajoEjecucion != null)
+                {
+                    this.Maquina.Pulsos.Add(new PulsoMaquina
+                    {
+                        PiezaIntroducida = consumo.PiezaIntroducida==1,
+                        CodigoEtiqueta = this.Maquina.TrabajoEjecucion.CodigoEtiquetaFichada,
+                        Control = new OperacionesControles
+                        {
+                            IdTipoMaquina = 1,
+                            TiempoBaseEjecucion = 0.01,
+                            TiempoCambioBarquilla = 0.3,
+                            TiempoInicio = 0,
+                            TiempoUtillajeEjecucion = 0.1,
+                        },
+                        Ciclo=consumo.SgCiclo,
+                        Fecha = DateTime.Now,
+                        IdOperario = Maquina.OperarioACargo.Id,
+                        PosicionGlobal = Maquina.PosicionGlobal??0,
+                    }) ;
+
+                    if(consumo.PiezaIntroducida == 1)
+                    {
+                        this.Maquina.InsertarPares(this.Maquina.TrabajoEjecucion, consumo.NumMoldes * consumo.ParesUtillaje);
+                    }
+                }
+                else
+                {
+                    BackgroundWorker bw = new BackgroundWorker();
+                    List<MaquinasColasTrabajo> colaTrabajo = new List<MaquinasColasTrabajo>();
+                    bw.DoWork += (se, ev) =>
+                    {
+                        colaTrabajo = daoPuesto.ObtenerColaTrabajoMaquina(this.Maquina.ID);
+                    };
+                    bw.RunWorkerCompleted += (se, ev) =>
+                    {
+                        if (colaTrabajo.Count == 0)
+                        {
+                            ClienteMqtt.Publicar(string.Format("/{0}/fallo/{1}", Maquina.Tipo, this.Maquina.IpAutomata.PadLeft(3)),
+                                string.Format("El automata {0} con maquina {1} no tiene cola de trabajo", Maquina.IpAutomata, Maquina.Posicion), 1);
+                        }
+                        Maquina.AsignarColaTrabajo(colaTrabajo);
+
+                    };
+                    bw.RunWorkerAsync();
+                }
+               
+
+            }catch(Exception ex)
+            {
+
+            }
         }
 
         private void Maquina_OnParesConsumidos(object sender, EventArgs e)
@@ -125,7 +280,7 @@ namespace MonitorWPF.Controles
                 {
                     if (this.Maquina.TemperaturaOK)
                     {
-                        if (this.Border.Background == Brushes.White)
+                        if (this.Border.Background == Brushes.Black)
                         {
                             PonerColorCaliente();
                         }
@@ -170,7 +325,7 @@ namespace MonitorWPF.Controles
             {
                 this.Dispatcher.BeginInvoke((Action)(() =>
                 {
-                    this.Border.Background = Brushes.White;
+                    this.Border.Background = Brushes.Black;
                 }));
             }
             catch (Exception ex)

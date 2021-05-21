@@ -24,7 +24,7 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <ctrl:RitmoControl Margin="1" Grid.Column="0"></ctrl:RitmoControl>
+            <ctrl:RitmoControl x:Name="RitmoControl" Margin="1" Grid.Column="0"></ctrl:RitmoControl>
             <ctrl:PrimaTiempoRealControl Margin="1" Grid.Column="1"></ctrl:PrimaTiempoRealControl>
             <ctrl:BotonLogoutControl x:Name="BtLogout"  Margin="1" Grid.Column="2"></ctrl:BotonLogoutControl>
         </Grid>

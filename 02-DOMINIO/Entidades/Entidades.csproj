@@ -199,6 +199,8 @@
     </Compile>
     <Compile Include="DB\Extensiones\MaquinasColasTrabajoExtension.cs" />
     <Compile Include="DB\Extensiones\MaquinasExtension.cs" />
+    <Compile Include="DB\Extensiones\MaquinasRegistrosDatos.cs" />
+    <Compile Include="DB\Extensiones\OperacionesControlesExtension.cs" />
     <Compile Include="DB\HistoricoDepositos.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -1042,9 +1044,12 @@
     <Compile Include="DTO\ConsumoPrensa.cs" />
     <Compile Include="DTO\PulsoMaquina.cs" />
     <Compile Include="Enum\ModoMaquina.cs" />
+    <Compile Include="Enum\Turno.cs" />
     <Compile Include="Eventos\ColorearEventArgs.cs" />
     <Compile Include="Eventos\ConfiguracionTerminadaEventArgs.cs" />
+    <Compile Include="Eventos\FichajeAsociacionEventArgs.cs" />
     <Compile Include="Eventos\ModoMaquinaCambioEventArgs.cs" />
+    <Compile Include="Eventos\MqttMensajeRecibidoEventArgs.cs" />
     <Compile Include="Eventos\OperarioEntraEventArgs.cs" />
     <Compile Include="Eventos\OperarioSaleEventArgs.cs" />
     <Compile Include="Local\ConfiguracionLayout.cs" />
@@ -1053,6 +1058,7 @@
     <Compile Include="Local\Store.cs" />
     <Compile Include="Notificable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util\Topic.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="DB\Model.tt">
@@ -1064,9 +1070,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Util\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>

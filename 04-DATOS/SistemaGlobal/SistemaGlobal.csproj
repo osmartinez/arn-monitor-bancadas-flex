@@ -68,6 +68,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Select\Operarios\Select.cs" />
     <Compile Include="Select\Puestos\Select.cs" />
+    <Compile Include="Select\Tarea\Select.cs" />
+    <Compile Include="Update\Puestos\Update.cs" />
   </ItemGroup>
   <ItemGroup>
     <EntityDeploy Include="Model.edmx">
@@ -104,7 +106,6 @@
     <Folder Include="Select\Productos\" />
     <Folder Include="Update\Operarios\" />
     <Folder Include="Update\Productos\" />
-    <Folder Include="Update\Puestos\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

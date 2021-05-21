@@ -22,6 +22,11 @@ namespace Almacenamiento.Implementaciones
             return Memoria.Memoria.ObtenerMaquinasPorOperario(op);
         }
 
+        public List<Maquinas> ObtenerMisMaquinas(Pantalla p)
+        {
+            return Memoria.Memoria.ObtenerMaquinasPorPantalla(p);
+        }
+
         public void Salir(Pantalla p, Operarios op)
         {
             Memoria.Memoria.SalirOperario(op, p);

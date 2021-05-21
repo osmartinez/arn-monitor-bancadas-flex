@@ -1,5 +1,6 @@
 ﻿using Almacenamiento.Implementaciones;
 using MonitorWPF.Paginas;
+using MqttServicio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,6 +73,30 @@ namespace MonitorWPF
             if (modo == "pegado")
             {
                 Frame.Navigate(new PegadoPaginaPrincipal());
+            }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            try
+            {
+                ClienteMqtt.Cerrar();
+            }
+            catch(Exception ex)
+            {
+                new Log().Escribir(ex);
+            }
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                //ClienteMqtt.Iniciar();
+            }
+            catch (Exception ex)
+            {
+                new Log().Escribir(ex);
             }
         }
     }

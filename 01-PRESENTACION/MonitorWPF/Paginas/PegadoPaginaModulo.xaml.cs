@@ -2,6 +2,7 @@
 using Almacenamiento.Interfaces;
 using Entidades.DB;
 using Entidades.Eventos;
+using Entidades.Local;
 using MonitorWPF.Controles;
 using System;
 using System.Collections.Generic;
@@ -30,9 +31,10 @@ namespace MonitorWPF.Paginas
         public event EventHandler<OperarioSaleEventArgs> OnOperarioSale;
 
         public Operarios Operario { get; set; } = new Operarios { Nombre = "- SIN OPERARIO -" };
+        public Pantalla Pantalla { get; set; } = null;
         public List<Maquinas> Maquinas { get; set; } = new List<Maquinas>();
        
-        public PegadoPaginaModulo(Operarios op)
+        public PegadoPaginaModulo(Operarios op,Pantalla p)
         {
             InitializeComponent();
   
@@ -42,16 +44,20 @@ namespace MonitorWPF.Paginas
             };
 
             this.Operario = op;
-            this.Maquinas = guiOperario.ObtenerMisMaquinas(op);
+            this.Pantalla = p;
+
+            this.Maquinas = guiOperario.ObtenerMisMaquinas(p);
 
             for(int i = 0;i<Maquinas.Count;i++)
             {
                 GridMaquinas.ColumnDefinitions.Add(new ColumnDefinition());
                 Maquinas maquina = this.Maquinas[i];
-                PrensaGenericaControl pgc = new PrensaGenericaControl(maquina);
+                PrensaGenericaControl pgc = new PrensaGenericaControl(maquina,op);
                 Grid.SetColumn(pgc, i);
                 GridMaquinas.Children.Add(pgc);
             }
+
+            this.RitmoControl.SetMaquinas(this.Operario, this.Maquinas);
         }
 
         public void OperarioSale()

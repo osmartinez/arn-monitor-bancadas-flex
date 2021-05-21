@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MonitorWPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="471.716" Width="650.402">
+        Title="MainWindow" Height="499.896" Width="935.882" Closing="Window_Closing" Loaded="Window_Loaded">
     <Frame Name="Frame" NavigationUIVisibility="Hidden">
-        
+
     </Frame>
 </Window>

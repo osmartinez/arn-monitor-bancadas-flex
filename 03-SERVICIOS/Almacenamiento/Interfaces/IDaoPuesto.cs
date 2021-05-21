@@ -10,5 +10,7 @@ namespace Almacenamiento.Interfaces
     public interface IDaoPuesto
     {
         List<Maquinas> ObtenerMaquinasEnSecciones(List<string> secciones);
+        List<MaquinasColasTrabajo> ObtenerColaTrabajoMaquina(int idMaquina);
+        List<MaquinasColasTrabajo> ActualizarColaTrabajo(string codigoBarquilla, List<int> idsTareas, int? agrupacion, int idMaquina, int idOperario, double cantidad);
     }
 }

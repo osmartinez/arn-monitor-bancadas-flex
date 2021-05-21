@@ -10,6 +10,7 @@ namespace Almacenamiento.Interfaces
 {
     public interface IGuiOperario
     {
+        List<Maquinas> ObtenerMisMaquinas(Pantalla p);
         List<Maquinas> ObtenerMisMaquinas(Operarios op);
         void Entrar(Pantalla p, Operarios op);
         void Salir(Pantalla p, Operarios op);

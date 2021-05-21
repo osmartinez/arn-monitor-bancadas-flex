@@ -1,6 +1,7 @@
 ﻿using Almacenamiento.Interfaces;
 using Entidades.DB;
 using SistemaGlobal.Select.Puestos;
+using SistemaGlobal.Update.Puestos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,16 @@ namespace Almacenamiento.Implementaciones
 {
     public class DaoPuesto : IDaoPuesto
     {
+        public List<MaquinasColasTrabajo> ActualizarColaTrabajo(string codigoBarquilla, List<int> idsTareas, int? agrupacion, int idMaquina, int idOperario, double cantidad)
+        {
+            return Update.ActualizarColaTrabajo(codigoBarquilla, idsTareas, agrupacion, idMaquina, idOperario, cantidad);
+        }
+
+        public List<MaquinasColasTrabajo> ObtenerColaTrabajoMaquina(int idMaquina)
+        {
+            return Select.ObtenerColaTrabajoMaquinaPorId(idMaquina);
+        }
+
         public List<Maquinas> ObtenerMaquinasEnSecciones(List<string> secciones)
         {
             return Select.ObtenerMaquinasEnSecciones(secciones);

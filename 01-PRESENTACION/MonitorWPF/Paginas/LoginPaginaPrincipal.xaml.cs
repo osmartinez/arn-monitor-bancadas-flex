@@ -52,7 +52,7 @@ namespace MonitorWPF.Paginas
         {
             if (OnOperarioEntra != null)
             {
-                OnOperarioEntra(this, new OperarioEntraEventArgs(op));
+                OnOperarioEntra(this, new OperarioEntraEventArgs(op,this.pantalla));
             }
         }
 

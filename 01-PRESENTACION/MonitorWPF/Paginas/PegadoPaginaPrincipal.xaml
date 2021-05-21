@@ -8,7 +8,14 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="PegadoPaginaPrincipal">
 
-    <Grid Name="Grid" Background="Black">
-        
+    <Grid Background="Black">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid Name="Grid" Grid.Row="0">
+            
+        </Grid>
+        <TextBox Name="TbCodigo" TextChanged="TbCodigo_TextChanged" Grid.Row="1" FontSize="3"></TextBox>
     </Grid>
 </Page>

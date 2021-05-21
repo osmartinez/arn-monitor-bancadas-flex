@@ -1,4 +1,5 @@
 ﻿using Entidades.DB;
+using Entidades.Local;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +11,11 @@ namespace Entidades.Eventos
     public class OperarioEntraEventArgs:EventArgs
     {
         public Operarios Operario { get; set; }
-
-        public OperarioEntraEventArgs(Operarios operario)
+        public Pantalla Pantalla { get; set; }
+        public OperarioEntraEventArgs(Operarios operario, Pantalla pantalla)
         {
             Operario = operario;
+            Pantalla = pantalla;
         }
     }
 }

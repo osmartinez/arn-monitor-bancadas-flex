@@ -12,7 +12,7 @@ namespace Almacenamiento.Implementaciones
     {
         private void EscribirConEstilo(string msg)
         {
-            FicheroLog.EscribirMensaje(string.Format("[{0}] \t{1}\n", DateTime.Now.ToLongTimeString(), msg));
+            FicheroLog.EscribirMensaje(string.Format("[{0} {1}] \t{2}\n", DateTime.Now.ToShortDateString(),DateTime.Now.ToShortTimeString(), msg));
         }
         public void Escribir(string msg)
         {
