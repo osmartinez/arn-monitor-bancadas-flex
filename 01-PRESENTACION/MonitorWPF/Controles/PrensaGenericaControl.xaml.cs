@@ -120,6 +120,7 @@ namespace MonitorWPF.Controles
                 bwActualizarCola.RunWorkerCompleted += (se, ev) =>
                 {
                     cola = maquinaDb.MaquinasColasTrabajo.ToList();
+                    this.Maquina.IpAutomata = maquinaDb.IpAutomata;
                     this.Maquina.Posicion = maquinaDb.Posicion;
                     this.Maquina.PosicionGlobal = maquinaDb.PosicionGlobal;
                     maquina.AsignarColaTrabajo(cola);
@@ -143,6 +144,7 @@ namespace MonitorWPF.Controles
                     }
                     Notifica("Maquina");
                 };
+
                 bwActualizarCola.RunWorkerAsync();
 
                

@@ -210,16 +210,21 @@ namespace Entidades.DB
                 }
                 if (this.TrabajoEjecucion != null)
                 {
-                    var pulsos = this.Pulsos.Where(x => x.CodigoEtiqueta == this.TrabajoEjecucion.CodigoEtiquetaFichada);
-                    if (pulsos.Count() > 0)
+                    try
                     {
-                        return pulsos.Sum(x => x.Pares);
-                    }
-                    else
+                        var pulsos = this.Pulsos.Where(x => x.CodigoEtiqueta == this.TrabajoEjecucion.CodigoEtiquetaFichada).ToList();
+                        if (pulsos.Count > 0)
+                        {
+                            return pulsos.Sum(x => x.Pares);
+                        }
+                        else
+                        {
+                            return 0;
+                        }
+                    }catch(Exception)
                     {
                         return 0;
                     }
-
                 }
                 else
                 {
