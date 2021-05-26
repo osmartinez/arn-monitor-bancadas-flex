@@ -22,6 +22,11 @@ namespace Almacenamiento.Implementaciones
             return Select.ObtenerColaTrabajoMaquinaPorId(idMaquina);
         }
 
+        public Maquinas ObtenerMaquinaConColaTrabajo(int idMaquina)
+        {
+            return Select.ObtenerMaquinaConColaTrabajo(idMaquina);
+        }
+
         public List<Maquinas> ObtenerMaquinasEnSecciones(List<string> secciones)
         {
             return Select.ObtenerMaquinasEnSecciones(secciones);

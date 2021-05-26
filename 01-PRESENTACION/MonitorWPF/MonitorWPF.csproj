@@ -34,7 +34,7 @@
     <PublisherName>Arneplant</PublisherName>
     <SuiteName>iot</SuiteName>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>3</ApplicationRevision>
+    <ApplicationRevision>20</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -113,6 +113,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controles\NombreOperarioControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controles\PrensaGenericaControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -122,6 +126,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controles\RitmoControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controles\VueltasControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -136,6 +144,9 @@
     <Compile Include="Controles\BotonLogoutControl.xaml.cs">
       <DependentUpon>BotonLogoutControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controles\NombreOperarioControl.xaml.cs">
+      <DependentUpon>NombreOperarioControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controles\PrensaGenericaControl.xaml.cs">
       <DependentUpon>PrensaGenericaControl.xaml</DependentUpon>
     </Compile>
@@ -144,6 +155,9 @@
     </Compile>
     <Compile Include="Controles\RitmoControl.xaml.cs">
       <DependentUpon>RitmoControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controles\VueltasControl.xaml.cs">
+      <DependentUpon>VueltasControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -158,6 +172,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Paginas\LoginPaginaPrincipal.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Paginas\MoldeadoPaginaModulo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Paginas\MoldeadoPaginaPrincipal.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -179,6 +201,12 @@
     </Compile>
     <Compile Include="Paginas\LoginPaginaPrincipal.xaml.cs">
       <DependentUpon>LoginPaginaPrincipal.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Paginas\MoldeadoPaginaModulo.xaml.cs">
+      <DependentUpon>MoldeadoPaginaModulo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Paginas\MoldeadoPaginaPrincipal.xaml.cs">
+      <DependentUpon>MoldeadoPaginaPrincipal.xaml</DependentUpon>
     </Compile>
     <Compile Include="Paginas\PegadoPaginaModulo.xaml.cs">
       <DependentUpon>PegadoPaginaModulo.xaml</DependentUpon>

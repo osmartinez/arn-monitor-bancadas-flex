@@ -30,6 +30,14 @@ namespace MonitorWPF
         public MainWindow()
         {
             InitializeComponent();
+
+            if (!System.Security.Principal.WindowsIdentity.GetCurrent().Name.Contains("omartinez"))
+            {
+                //KillExplorer();
+                this.Topmost = true;
+                this.WindowStyle = WindowStyle.None;
+            }
+
             this.Frame.Navigate(new BienvenidaAplicacionPaginaPrincipal());
             timerLoading.Tick += (s, e) => { this.timerLoading.Stop(); CargarAplicacion(); };
             timerLoading.Start();
@@ -73,6 +81,10 @@ namespace MonitorWPF
             if (modo == "pegado")
             {
                 Frame.Navigate(new PegadoPaginaPrincipal());
+            }
+            else
+            {
+                Frame.Navigate(new MoldeadoPaginaPrincipal());
             }
         }
 

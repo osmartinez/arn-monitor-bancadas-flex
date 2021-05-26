@@ -38,6 +38,7 @@ namespace MonitorWPF.Controles
             InitializeComponent();
             this.DataContext = this;
             this.timer.Tick += Timer_Tick;
+            this.timer.Start();
         }
 
         /// <summary>

@@ -37,6 +37,20 @@ namespace SistemaGlobal.Select.Puestos
             }
         }
 
+        public static Maquinas ObtenerMaquinaConColaTrabajo(int idMAquina)
+        {
+            using (SistemaGlobalPREEntities db = new SistemaGlobalPREEntities())
+            {
+                var cola = db.Maquinas
+                    .Include("MaquinasColasTrabajo.OrdenesFabricacionOperacionesTallasCantidad.OrdenesFabricacionOperacionesTallas.OrdenesFabricacionOperaciones.OrdenesFabricacion.Campos_ERP")
+                    .Include("MaquinasColasTrabajo.OrdenesFabricacionOperacionesTallasCantidad.OrdenesFabricacionProductos")
+                    .Where(m => m.ID == idMAquina).FirstOrDefault();
+
+
+                return cola;
+            }
+        }
+
         public static List<MaquinasColasTrabajo> ObtenerColaTrabajoMaquinaPorId(int idMaquina)
         {
             using (SistemaGlobalPREEntities db = new SistemaGlobalPREEntities())

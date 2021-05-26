@@ -26,9 +26,9 @@ using System.Windows.Threading;
 namespace MonitorWPF.Paginas
 {
     /// <summary>
-    /// Lógica de interacción para PegadoPaginaPrincipal.xaml
+    /// Lógica de interacción para MoldeadoPaginaPrincipal.xaml
     /// </summary>
-    public partial class PegadoPaginaPrincipal : Page
+    public partial class MoldeadoPaginaPrincipal : Page
     {
         private IGuiConfiguracion guiConfig = new GuiConfiguracion();
         private IDaoTarea daoTarea = new DaoTarea();
@@ -38,13 +38,23 @@ namespace MonitorWPF.Paginas
         private DispatcherTimer timerEventoFichaje = new DispatcherTimer { Interval = new TimeSpan(0, 0, 5) };
 
         private Queue<FichajeAsociacionEventArgs> colaEventosFichaje = new Queue<FichajeAsociacionEventArgs>();
-        private List<PegadoPaginaModulo> paginasModulos = new List<PegadoPaginaModulo>();
-
+        private List<MoldeadoPaginaModulo> paginasModulos = new List<MoldeadoPaginaModulo>();
         List<Frame> frames = new List<Frame>();
 
-        public PegadoPaginaPrincipal()
+        private Dictionary<string, string> maquinasEmparejadas = new Dictionary<string, string>() {
+            { "0200000007676", "0200000007690" },
+            { "0200000007713","0200000007737"},
+            { "0200000007751","0200000007775"},
+            { "0200000007799","0200000007812"},
+            { "0200000007805","0200000007782"},
+            { "0200000007768","0200000007744"},
+            { "0200000007720","0200000007706"},
+            { "0200000007683","0200000007669"}, };
+
+        public MoldeadoPaginaPrincipal()
         {
-            InitializeComponent();
+            this.InitializeComponent();
+
             timerFocus.Tick += TimerFocus_Tick;
             timerEventoFichaje.Tick += TimerEventoFichaje_Tick;
             timerFocus.Start();
@@ -70,16 +80,16 @@ namespace MonitorWPF.Paginas
 
                 LoginPaginaPrincipal lpp = new LoginPaginaPrincipal(pantallas[locali]);
                 lpp.OnOperarioEntra += (s, e) =>
-                {
+                        {
 
-                    PegadoPaginaModulo ppm = new PegadoPaginaModulo(e.Operario, e.Pantalla);
-                    paginasModulos.Add(ppm);
-                    ppm.OnOperarioSale += (s2, e2) =>
-                    {
-                        frames[locali].GoBack();
-                    };
-                    frames[locali].Navigate(ppm);
-                };
+                            MoldeadoPaginaModulo mpm = new MoldeadoPaginaModulo(e.Operario, e.Pantalla);
+                            paginasModulos.Add(mpm);
+                            mpm.OnOperarioSale += (s2, e2) =>
+                            {
+                                frames[locali].GoBack();
+                            };
+                            frames[locali].Navigate(mpm);
+                        };
 
                 frames[locali].Navigate(lpp);
             }
@@ -217,6 +227,10 @@ namespace MonitorWPF.Paginas
             try
             {
                 this.colaEventosFichaje.Enqueue(e);
+                if (maquinasEmparejadas.ContainsKey(e.CodigoMaquina))
+                {
+                    this.colaEventosFichaje.Enqueue(new FichajeAsociacionEventArgs(maquinasEmparejadas[e.CodigoMaquina], e.CodigoBarquilla));
+                }
             }
             catch (Exception ex)
             {

@@ -60,17 +60,21 @@ namespace Fichajes
 
         public static void EtiquetaFichada(string cod)
         {
-            if (cod[0] == '5')
+            if (cod.Length > 0)
             {
-                // barquilla
-                BarquillaFichada("0" + cod);
-            }
-            else if (cod[0] == '2')
-            {
-                // maquina
-                MaquinaFichada("0" + cod);
+                if (cod[0] == '5')
+                {
+                    // barquilla
+                    BarquillaFichada("0" + cod);
+                }
+                else if (cod[0] == '2')
+                {
+                    // maquina
+                    MaquinaFichada("0" + cod);
 
+                }
             }
+           
         }
 
         private static void BarquillaFichada(string cod)

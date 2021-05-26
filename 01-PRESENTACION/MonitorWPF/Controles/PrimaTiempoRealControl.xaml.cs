@@ -20,7 +20,7 @@ namespace MonitorWPF.Controles
     /// </summary>
     public partial class PrimaTiempoRealControl : UserControl
     {
-        public double Prima { get; set; } = 0;
+        public double Prima { get; set; } = 1.4;
         public PrimaTiempoRealControl()
         {
             InitializeComponent();

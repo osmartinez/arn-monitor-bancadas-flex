@@ -102,20 +102,26 @@ namespace MonitorWPF.Controles
             {
                 BackgroundWorker bwActualizarCola = new BackgroundWorker();
                 List<MaquinasColasTrabajo> cola = new List<MaquinasColasTrabajo>();
+                Maquinas maquinaDb = null;
                 List<MaquinasRegistrosDatos> paquetesHistorico = new List<MaquinasRegistrosDatos>();
                 DateTime ahora = DateTime.Now;
                 Turno turno = HorarioTurnos.CalcularTurnoAFecha(ahora);
                 DateTime fechaInicio;
                 DateTime fechaFin;
                 HorarioTurnos.CalcularHorarioTurno(turno, ahora, out fechaInicio, out fechaFin);
+                
+                maquina.Pulsos.Clear();
 
                 bwActualizarCola.DoWork += (se, ev) =>
                 {
-                    cola = daoPuesto.ObtenerColaTrabajoMaquina(maquina.ID);
+                    maquinaDb = daoPuesto.ObtenerMaquinaConColaTrabajo(maquina.ID);
                     paquetesHistorico = daoTarea.ObtenerHistoricoParesOperario(op.Id, maquina.IpAutomata, maquina.Posicion, fechaInicio, fechaFin);
                 };
                 bwActualizarCola.RunWorkerCompleted += (se, ev) =>
                 {
+                    cola = maquinaDb.MaquinasColasTrabajo.ToList();
+                    this.Maquina.Posicion = maquinaDb.Posicion;
+                    this.Maquina.PosicionGlobal = maquinaDb.PosicionGlobal;
                     maquina.AsignarColaTrabajo(cola);
 
                     ClienteMqtt.Suscribir(this.topicNormal);
@@ -135,6 +141,7 @@ namespace MonitorWPF.Controles
                             IdOperario = paquete.IdOperario,
                         });
                     }
+                    Notifica("Maquina");
                 };
                 bwActualizarCola.RunWorkerAsync();
 
@@ -149,12 +156,31 @@ namespace MonitorWPF.Controles
 
         private void TopicCalentar_OnMensajeRecibido(object sender, Entidades.Eventos.MqttMensajeRecibidoEventArgs e)
         {
-            timerCalentamiento.Start();
+            try
+            {
+                ConsumoPrensa consumo = JsonConvert.DeserializeObject<ConsumoPrensa>(e.Cuerpo);
+
+                if (consumo.Prensa == this.Maquina.Posicion)
+                {
+                    timerCalentamiento.Start();
+                }
+            }
+            catch (Exception ex)
+            {
+                new Log().Escribir(ex);
+            }
         }
 
         private void TopicAsociarTarea_OnMensajeRecibido(object sender, Entidades.Eventos.MqttMensajeRecibidoEventArgs e)
         {
-            
+            try
+            {
+
+            }catch(Exception ex)
+            {
+                new Log().Escribir(ex);
+
+            }
         }
 
         private void TopicNormal_OnMensajeRecibido(object sender, Entidades.Eventos.MqttMensajeRecibidoEventArgs e)
@@ -198,12 +224,15 @@ namespace MonitorWPF.Controles
                         Fecha = DateTime.Now,
                         IdOperario = Maquina.OperarioACargo.Id,
                         PosicionGlobal = Maquina.PosicionGlobal??0,
+                        Pares = (consumo.ParesUtillaje==0?1:consumo.ParesUtillaje) * consumo.NumMoldes,
                     }) ;
 
                     if(consumo.PiezaIntroducida == 1)
                     {
-                        this.Maquina.InsertarPares(this.Maquina.TrabajoEjecucion, consumo.NumMoldes * consumo.ParesUtillaje);
+                        this.Maquina.InsertarPares(this.Maquina.TrabajoEjecucion, consumo.NumMoldes * (consumo.ParesUtillaje == 0 ? 1 : consumo.ParesUtillaje));
                     }
+
+                    Notifica("Maquina");
                 }
                 else
                 {
@@ -229,7 +258,7 @@ namespace MonitorWPF.Controles
 
             }catch(Exception ex)
             {
-
+                new Log().Escribir(ex);
             }
         }
 

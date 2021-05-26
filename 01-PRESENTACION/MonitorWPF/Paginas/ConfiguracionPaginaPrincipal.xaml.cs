@@ -89,7 +89,7 @@ namespace MonitorWPF.Paginas
             this.DataContext = this;
             try
             {
-                this.Maquinas.AddRange(daoPuesto.ObtenerMaquinasEnSecciones(new List<string> { "120" }));
+                this.Maquinas.AddRange(daoPuesto.ObtenerMaquinasEnSecciones(new List<string> { "120","110" }));
             }
             catch (Exception ex)
             {

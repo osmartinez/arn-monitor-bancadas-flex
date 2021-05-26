@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using uPLibrary.Networking.M2Mqtt;
 
@@ -65,13 +66,29 @@ namespace MqttServicio
             {
                 if (!cierreForzado)
                 {
-                    Iniciar();
+                    try
+                    {
+                        while (client == null || !client.IsConnected)
+                        {
+                            Iniciar();
+                            Thread.Sleep(2000);
+                        }
+                        foreach (var topic in Topics)
+                        {
+                            Suscribir(topic);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        new Log().Escribir(ex);
+                    }
                 }
                 else
                 {
                     cierreForzado = false;
                 }
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 new Log().Escribir(ex);
             }
