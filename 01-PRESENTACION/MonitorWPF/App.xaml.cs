@@ -22,6 +22,8 @@ namespace MonitorWPF
         void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
             new Log().Escribir(e.Exception);
+            e.Handled = true;
+
         }
     }
 }

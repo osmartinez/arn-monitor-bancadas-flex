@@ -2,6 +2,7 @@
 using Local;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,7 +22,11 @@ namespace Almacenamiento.Implementaciones
 
         public void Escribir(Exception ex)
         {
-            this.EscribirConEstilo(ex.Message);
+            var st = new StackTrace(ex, true);
+            var frame = st.GetFrame(0);
+            int line = frame.GetFileLineNumber();
+            string filename = frame.GetFileName();
+            this.EscribirConEstilo(string.Format("{0}@{1} {2}",filename,line,ex.Message));
         }
 
         public string Leer()

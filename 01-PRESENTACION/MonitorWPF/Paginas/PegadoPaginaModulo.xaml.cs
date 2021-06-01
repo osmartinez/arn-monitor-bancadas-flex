@@ -41,6 +41,14 @@ namespace MonitorWPF.Paginas
             this.DataContext = this;
             this.BtLogout.OnPulsado += (s, e) => {
                 OperarioSale();
+                foreach(var control in GridMaquinas.Children)
+                {
+                    var controlPrensa = control as PrensaGenericaControl;
+                    if (controlPrensa != null)
+                    {
+                        controlPrensa.Desuscribir();
+                    }
+                }
             };
 
             this.Operario = op;
@@ -58,6 +66,7 @@ namespace MonitorWPF.Paginas
             }
 
             this.RitmoControl.SetMaquinas(this.Operario, this.Maquinas);
+            this.NombreOperarioControl.SetOperario(this.Operario);
         }
 
         public void OperarioSale()

@@ -22,7 +22,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Border BorderThickness="1" Grid.Row="0" Grid.ColumnSpan="3" BorderBrush="White">
-            <TextBox  Background="Black" Foreground="White" Text="{Binding CodigoOperario, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" TextAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center" Height="100" FontSize="60"></TextBox>
+            <TextBox Name="TbCodigoOperario"  Background="Black" Foreground="White" Text="{Binding CodigoOperario, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" TextAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center" Height="100" FontSize="60"></TextBox>
         </Border>
 
         <Button x:Name="Bt1" Click="BtNumeroClick" Grid.Column="0" Grid.Row="1" Style="{StaticResource BotonNumeroLogin}">

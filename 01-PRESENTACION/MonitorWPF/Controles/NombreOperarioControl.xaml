@@ -12,6 +12,7 @@
                 <DropShadowEffect BlurRadius="15" Direction="-90" RenderingBias="Quality" Opacity=".2" ShadowDepth="1"/>
             </Border.Effect>
             <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Text="{Binding Operario.CodigoObrero}" TextWrapping="Wrap"  TextTrimming="CharacterEllipsis"  FontSize="15" Foreground="White"></TextBlock>
                 <TextBlock Text="{Binding Operario.Nombre}" TextWrapping="Wrap"  TextTrimming="CharacterEllipsis"  FontSize="25" Foreground="White"></TextBlock>
             </StackPanel>
         </Border>

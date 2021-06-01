@@ -5,6 +5,7 @@ using Entidades.DTO;
 using Entidades.Enum;
 using Entidades.Util;
 using Horario;
+using MonitorWPF.Ventanas;
 using MqttServicio;
 using Newtonsoft.Json;
 using System;
@@ -91,12 +92,8 @@ namespace MonitorWPF.Controles
             this.timerLimiteCaja.Start();
             this.timerInactividad.Start();
 
-            this.topicNormal = new Topic(string.Format("/{0}/plc/{1}/normal",maquina.Tipo,maquina.IpAutomata),(byte)2);
-            this.topicNormal.OnMensajeRecibido += TopicNormal_OnMensajeRecibido;
-            this.topicCalentar = new Topic(string.Format("/{0}/plc/{1}/calentar", maquina.Tipo, maquina.IpAutomata), (byte)1);
-            this.topicCalentar.OnMensajeRecibido += TopicCalentar_OnMensajeRecibido;
-            this.topicAsociarTarea = new Topic(string.Format("/{0}/plc/{1}/asociarTarea", maquina.Tipo, maquina.IpAutomata), (byte)1);
-            this.topicAsociarTarea.OnMensajeRecibido += TopicAsociarTarea_OnMensajeRecibido;
+            this.PreviewMouseUp += PrensaGenericaControl_PreviewMouseUp;
+
             
             try
             {
@@ -123,6 +120,13 @@ namespace MonitorWPF.Controles
                     this.Maquina.IpAutomata = maquinaDb.IpAutomata;
                     this.Maquina.Posicion = maquinaDb.Posicion;
                     this.Maquina.PosicionGlobal = maquinaDb.PosicionGlobal;
+                    this.topicNormal = new Topic(string.Format("/{0}/plc/{1}/normal", maquina.Tipo, maquina.IpAutomata), (byte)2);
+                    this.topicCalentar = new Topic(string.Format("/{0}/plc/{1}/calentar", maquina.Tipo, maquina.IpAutomata), (byte)1);
+                    this.topicAsociarTarea = new Topic(string.Format("/{0}/plc/{1}/asociarTarea", maquina.Tipo, maquina.IpAutomata), (byte)1);
+                    this.topicNormal.OnMensajeRecibido += TopicNormal_OnMensajeRecibido;                    
+                    this.topicCalentar.OnMensajeRecibido += TopicCalentar_OnMensajeRecibido;
+                    this.topicAsociarTarea.OnMensajeRecibido += TopicAsociarTarea_OnMensajeRecibido;
+
                     maquina.AsignarColaTrabajo(cola);
 
                     ClienteMqtt.Suscribir(this.topicNormal);
@@ -143,6 +147,8 @@ namespace MonitorWPF.Controles
                         });
                     }
                     Notifica("Maquina");
+                    Loader.Visibility = Visibility.Collapsed;
+                    PanelPrincipal.Visibility = Visibility.Visible;
                 };
 
                 bwActualizarCola.RunWorkerAsync();
@@ -154,6 +160,25 @@ namespace MonitorWPF.Controles
                 new Log().Escribir(ex);
             }
 
+        }
+
+        private void PrensaGenericaControl_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            VerDetallesPrensa vdp = new VerDetallesPrensa(this.Maquina);
+            vdp.ShowDialog();
+        }
+
+        public void Desuscribir()
+        {
+            try
+            {
+                ClienteMqtt.Desuscribir(this.topicNormal);
+                ClienteMqtt.Desuscribir(this.topicCalentar);
+                ClienteMqtt.Desuscribir(this.topicAsociarTarea);
+            }catch(Exception ex)
+            {
+                new Log().Escribir(ex);
+            }
         }
 
         private void TopicCalentar_OnMensajeRecibido(object sender, Entidades.Eventos.MqttMensajeRecibidoEventArgs e)

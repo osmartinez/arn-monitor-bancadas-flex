@@ -35,5 +35,11 @@ namespace Entidades.Util
                 OnMensajeRecibido(this, new MqttMensajeRecibidoEventArgs(this.Nombre, cuerpo, this));
             }
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Topic topic &&
+                   Id.Equals(topic.Id);
+        }
     }
 }

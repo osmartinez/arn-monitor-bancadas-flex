@@ -3,6 +3,7 @@ using Almacenamiento.Interfaces;
 using Entidades.DB;
 using Entidades.Eventos;
 using Entidades.Local;
+using MonitorWPF.Ventanas;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -27,18 +28,19 @@ namespace MonitorWPF.Paginas
     public partial class LoginPaginaPrincipal : Page, INotifyPropertyChanged
     {
         private IDaoOperario daoOperario = new DaoOperario();
-        private IGuiOperario guiOperario= new GuiOperario();
+        private IGuiOperario guiOperario = new GuiOperario();
         private Pantalla pantalla;
 
         public event EventHandler<OperarioEntraEventArgs> OnOperarioEntra;
 
         public string CodigoOperario { get; set; } = "";
-        
+
         public LoginPaginaPrincipal(Pantalla p)
         {
             InitializeComponent();
             this.pantalla = p;
             this.DataContext = this;
+            this.Loaded += (s, e) => { btOk.IsEnabled = true; };
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -52,7 +54,7 @@ namespace MonitorWPF.Paginas
         {
             if (OnOperarioEntra != null)
             {
-                OnOperarioEntra(this, new OperarioEntraEventArgs(op,this.pantalla));
+                OnOperarioEntra(this, new OperarioEntraEventArgs(op, this.pantalla));
             }
         }
 
@@ -77,36 +79,61 @@ namespace MonitorWPF.Paginas
         private void btOk_Click(object sender, RoutedEventArgs e)
         {
             bool error = false;
+            Loader loader = new Loader();
+            this.IsEnabled = false;
+            loader.Show();
 
             try
             {
                 if (string.IsNullOrEmpty(CodigoOperario))
                 {
                     error = true;
+                    loader.Close();
+                    this.IsEnabled = true;
+
                 }
                 else
                 {
-                    var operario = daoOperario.BuscarPorCodigo(CodigoOperario);
-                    if (operario != null)
+                    Operarios operario = null;
+                    BackgroundWorker bw = new BackgroundWorker();
+                    bw.DoWork += (se, ev) =>
                     {
-                        guiOperario.Entrar(this.pantalla, operario);
-                        OperarioEntra(operario);
-                    }
-                    else
+                        operario = daoOperario.BuscarPorCodigo(CodigoOperario);
+                    };
+                    bw.RunWorkerCompleted += (se, ev) =>
                     {
-                        error = true;
-                    }
+                        if (operario != null)
+                        {
+                            guiOperario.Entrar(this.pantalla, operario);
+                            OperarioEntra(operario);
+                        }
+                        else
+                        {
+                            error = true;
+                        }
+                        loader.Close();
+                        this.IsEnabled = true;
+                        this.CodigoOperario = "";
+                        Notificar("CodigoOperario");
+
+                    };
+                    bw.RunWorkerAsync();
+
                 }
-               
+
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
                 error = true;
+                loader.Close();
+                this.IsEnabled = true;
+                this.CodigoOperario = "";
+                Notificar("CodigoOperario");
+
             }
 
-            this.CodigoOperario = "";
-            Notificar("CodigoOperario");
+
         }
     }
 }

@@ -13,13 +13,14 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
+            <ProgressBar Name="Loader" Visibility="Visible" Grid.RowSpan="3" VerticalAlignment="Center" Height="30" IsIndeterminate="True" Margin="20 0 20 0"></ProgressBar>
             <Border Grid.Row="0" >
                 <TextBlock Text="{Binding NombrePrensa, Mode=OneWay}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="13" Foreground="White"></TextBlock>
             </Border>
             <Border Grid.Row="1" Grid.Column="0" BorderThickness="0.5" BorderBrush="White" >
                 <TextBlock Text="{Binding Maquina.Cliente}" TextTrimming="CharacterEllipsis" HorizontalAlignment="Center" FontSize="15" Foreground="White"></TextBlock>
             </Border>
-            <Border Grid.Row="2" Grid.Column="0" BorderThickness="0.5" BorderBrush="White" >
+            <Border x:Name="PanelPrincipal" Visibility="Hidden" Grid.Row="2" Grid.Column="0" BorderThickness="0.5" BorderBrush="White" >
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
