@@ -114,6 +114,16 @@ namespace MonitorWPF.Paginas
                         var infoBarquillaSeccion = daoTarea.BuscarInformacionBarquilla(evento.CodigoBarquilla, maquina.CodSeccion);
                         if (infoBarquillaSeccion.Any())
                         {
+                            // check por si hay fallo de barquilla duplicada
+                            var agrupacion = infoBarquillaSeccion.First().Agrupacion;
+                            var idOrden = infoBarquillaSeccion.First().IdOrden;
+                            var codigoBarquilla = infoBarquillaSeccion.First().CodigoEtiqueta;
+                            if(!infoBarquillaSeccion.All(x=>x.Agrupacion == agrupacion && x.CodigoEtiqueta == codigoBarquilla))
+                            {
+                                infoBarquillaSeccion.RemoveAll(x => x.Agrupacion != agrupacion || x.CodigoEtiqueta != codigoBarquilla);
+                            }
+                            // fin check
+
                             var idsOrden = infoBarquillaSeccion.Select(x => x.IdOrden);
                             var idsOrdenDistinto = idsOrden.Distinct();
                             if (idsOrden.Count() != idsOrdenDistinto.Count())
