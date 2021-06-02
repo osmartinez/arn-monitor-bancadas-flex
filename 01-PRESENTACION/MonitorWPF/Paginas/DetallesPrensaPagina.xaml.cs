@@ -1,4 +1,5 @@
-﻿using Entidades.DB;
+﻿using Almacenamiento.Implementaciones;
+using Entidades.DB;
 using Entidades.Util;
 using System;
 using System.Collections.Generic;
@@ -33,11 +34,31 @@ namespace MonitorWPF.Paginas
             this.maquina = maq;
             CargarInformacion();
             this.maquina.OnColaTrabajoActualizada += Maquina_OnColaTrabajoActualizada;
+            this.maquina.OnParesConsumidos += Maquina_OnParesConsumidos;
+        }
+
+        private void Maquina_OnParesConsumidos(object sender, EventArgs e)
+        {
+            try
+            {
+                CargarInformacion();
+            }
+            catch (Exception ex)
+            {
+                new Log().Escribir(ex);
+            }
         }
 
         private void Maquina_OnColaTrabajoActualizada(object sender, EventArgs e)
         {
-            CargarInformacion();
+            try
+            {
+                CargarInformacion();
+            }
+            catch (Exception ex)
+            {
+                new Log().Escribir(ex);
+            }
         }
 
         private void CargarInformacion()
@@ -45,10 +66,14 @@ namespace MonitorWPF.Paginas
             Informacion.Clear();
             Informacion.Add(new ClaveValor<string, string>("MÁQUINA", this.maquina.Nombre));
             Informacion.Add(new ClaveValor<string, string>("OF", this.maquina.CodigoOrden));
+            Informacion.Add(new ClaveValor<string, string>("PENDIENTE", this.maquina.TrabajoEjecucion.ParesPendientes.ToString()));
             Informacion.Add(new ClaveValor<string, string>("CLIENTE", this.maquina.Cliente));
+            Informacion.Add(new ClaveValor<string, string>("MODELO", this.maquina.Modelo));
             Informacion.Add(new ClaveValor<string, string>("UTILLAJE", this.maquina.Utillaje));
-            Informacion.Add(new ClaveValor<string, string>("TALLA_UTILLAJE", this.maquina.TallaUtillaje));
-        }
+            Informacion.Add(new ClaveValor<string, string>("TALLA_MOLDE", this.maquina.TallaUtillaje));
+            Informacion.Add(new ClaveValor<string, string>("TALLA_CAJA", this.maquina.TrabajoEjecucion.TallaEtiquetaFichada));
+            Informacion.Add(new ClaveValor<string, string>("CAJA", string.Format("{0}/{1}",this.maquina.CantidadCajaRealizada,this.maquina.CantidadCaja)));
+        }  
 
         private void Salir()
         {

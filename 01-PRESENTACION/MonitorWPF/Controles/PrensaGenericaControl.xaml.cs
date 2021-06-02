@@ -92,7 +92,7 @@ namespace MonitorWPF.Controles
             this.timerLimiteCaja.Start();
             this.timerInactividad.Start();
 
-            this.PreviewMouseUp += PrensaGenericaControl_PreviewMouseUp;
+            this.PreviewMouseDown += PrensaGenericaControl_PreviewMouseUp;
 
             
             try

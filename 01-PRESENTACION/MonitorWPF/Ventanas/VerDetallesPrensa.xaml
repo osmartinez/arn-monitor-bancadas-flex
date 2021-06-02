@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:MonitorWPF.Ventanas"
         xmlns:page="clr-namespace:MonitorWPF.Paginas"
         mc:Ignorable="d"
-        Title="VerDetallesPrensa" Height="380.323" Width="596.774" ResizeMode="NoResize" WindowStartupLocation="CenterScreen"> 
+        Title="VerDetallesPrensa" WindowState="Maximized" WindowStyle="None" Topmost="True" Height="380.323" Width="596.774" ResizeMode="NoResize" WindowStartupLocation="CenterScreen"> 
     <Grid>
         <Frame Name="Frame" NavigationUIVisibility="Hidden" JournalOwnership="OwnsJournal">
         </Frame>
