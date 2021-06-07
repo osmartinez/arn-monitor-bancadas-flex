@@ -34,6 +34,8 @@ namespace MonitorWPF.Paginas
         private IDaoTarea daoTarea = new DaoTarea();
         private IDaoPuesto daoPuesto = new DaoPuesto();
 
+        public event EventHandler<EventArgs> OnAbrirConfiguracionUsuario;
+
         private DispatcherTimer timerFocus = new DispatcherTimer { Interval = new TimeSpan(0, 0, 2) };
         private DispatcherTimer timerEventoFichaje = new DispatcherTimer { Interval = new TimeSpan(0, 0, 5) };
 
@@ -85,6 +87,13 @@ namespace MonitorWPF.Paginas
             }
         }
 
+        private void AbrirConfiguracionUsuario()
+        {
+            if(OnAbrirConfiguracionUsuario != null)
+            {
+                OnAbrirConfiguracionUsuario(this, new EventArgs());
+            }
+        }
         private void TimerEventoFichaje_Tick(object sender, EventArgs e)
         {
             FichajeAsociacionEventArgs evento = null;
@@ -256,6 +265,11 @@ namespace MonitorWPF.Paginas
                 TbCodigo.Clear();
                 FichajeAgente.EtiquetaFichada(codigo);
             }
+        }
+
+        private void BtConfigUsuario_Click(object sender, RoutedEventArgs e)
+        {
+            AbrirConfiguracionUsuario();
         }
     }
 }

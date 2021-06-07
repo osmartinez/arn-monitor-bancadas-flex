@@ -13,5 +13,6 @@ namespace Almacenamiento.Interfaces
         int ObtenerNumeroPantallas();
         List<Pantalla> ObtenerPantallas();
         void GuardarConfiguracion(ConfiguracionGlobal cfg);
+        ConfiguracionGlobal LeerConfiguracion();
     }
 }

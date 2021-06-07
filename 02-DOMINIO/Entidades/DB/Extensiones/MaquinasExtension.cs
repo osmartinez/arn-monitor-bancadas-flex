@@ -332,7 +332,8 @@ namespace Entidades.DB
         public List<PulsoMaquina> Pulsos { get; private set; } = new List<PulsoMaquina>();
 
         public virtual Operarios OperarioACargo { get; set; }
-
+        public int PosicionLayout { get; set; }
+        public int IndicePantalla { get; set; }
         public void CambiarModo(ModoMaquina modo)
         {
             this.Modo = modo;

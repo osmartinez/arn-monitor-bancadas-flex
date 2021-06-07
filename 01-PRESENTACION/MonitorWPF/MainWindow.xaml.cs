@@ -65,7 +65,7 @@ namespace MonitorWPF
             if(e.Key == Key.F1)
             {
                 LimpiarPaginas();
-                ConfiguracionPaginaPrincipal cfg = new ConfiguracionPaginaPrincipal();
+                ConfiguracionPaginaPrincipal2 cfg = new ConfiguracionPaginaPrincipal2();
                 cfg.OnConfiguracionTerminada += (s, ev) => {
                     LimpiarPaginas();
                     this.Frame.Navigate(new BienvenidaAplicacionPaginaPrincipal());
@@ -80,7 +80,13 @@ namespace MonitorWPF
             string modo = guiConfig.ObtenerModo();
             if (modo == "pegado")
             {
-                Frame.Navigate(new PegadoPaginaPrincipal());
+                PegadoPaginaPrincipal ppp = new PegadoPaginaPrincipal();
+                ppp.OnAbrirConfiguracionUsuario += (s, e) => {
+                    var cup = new ConfiguracionUsuarioPrincipal();
+                    cup.OnCerrar += (s2, e2) => { LimpiarPaginas();CargarAplicacion(); };
+                    Frame.Navigate(cup);
+                };
+                Frame.Navigate(ppp);
             }
             else
             {

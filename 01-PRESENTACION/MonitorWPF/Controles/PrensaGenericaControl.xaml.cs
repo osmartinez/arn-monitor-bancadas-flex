@@ -106,7 +106,10 @@ namespace MonitorWPF.Controles
                 DateTime fechaInicio;
                 DateTime fechaFin;
                 HorarioTurnos.CalcularHorarioTurno(turno, ahora, out fechaInicio, out fechaFin);
-                
+                if (maquina.Nombre.Contains("203"))
+                {
+
+                }
                 maquina.Pulsos.Clear();
 
                 bwActualizarCola.DoWork += (se, ev) =>

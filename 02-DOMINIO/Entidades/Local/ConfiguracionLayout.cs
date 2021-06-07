@@ -9,6 +9,7 @@ namespace Entidades.Local
 {
     public class ConfiguracionLayout
     {
+        public string Alias { get; set; } = "- NUEVA -";
         public Guid Id { get; set; }
         public List<Pantalla> Pantallas { get; set; } = new List<Pantalla>();
         public ConfiguracionLayout()

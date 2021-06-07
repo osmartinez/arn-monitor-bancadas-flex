@@ -55,6 +55,7 @@ namespace MonitorWPF.Paginas
             this.Pantalla = p;
 
             this.Maquinas = guiOperario.ObtenerMisMaquinas(p);
+            
 
             for(int i = 0;i<Maquinas.Count;i++)
             {

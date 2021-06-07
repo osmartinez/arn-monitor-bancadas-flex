@@ -16,6 +16,11 @@ namespace Almacenamiento.Implementaciones
             Fichero.EscribirConfiguracion(cfg);
         }
 
+        public ConfiguracionGlobal LeerConfiguracion()
+        {
+            return Fichero.LeerConfiguracion();
+        }
+
         public string ObtenerModo()
         {
             return Fichero.LeerConfiguracion().Modo;
