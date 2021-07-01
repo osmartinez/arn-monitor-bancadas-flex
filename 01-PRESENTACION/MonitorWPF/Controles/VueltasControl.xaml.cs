@@ -1,4 +1,6 @@
 ﻿using Entidades.DB;
+using Entidades.Enum;
+using Horario;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -47,12 +49,18 @@ namespace MonitorWPF.Controles
         {
             if (this.maquinas.Count > 0 && this.operario !=null)
             {
+                Turno turno = HorarioTurnos.CalcularTurnoAFecha(DateTime.Now);
+                DateTime inicio = DateTime.Now;
+                DateTime fin = DateTime.Now;
+                HorarioTurnos.CalcularHorarioTurno(turno, DateTime.Now, out inicio, out fin);
                 int maxPulsos = 0;
                 Maquinas maxMaquina = null;
                 foreach(var maquina in this.maquinas)
                 {
-                    int cont = maquina.Pulsos.Where(x => x.IdOperario == operario.Id).Count();
+                    int cont = maquina.Pulsos.Where(x => x.IdOperario == operario.Id
+                    && (inicio <= x.FechaLocal && x.FechaLocal <= fin)).Count();
                     if(cont > maxPulsos)
+
                     {
                         maxPulsos = cont;
                         maxMaquina = maquina;

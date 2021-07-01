@@ -10,12 +10,26 @@
 
     <Grid Background="Black">
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
             <RowDefinition/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <Grid Name="Grid" HorizontalAlignment="Stretch">
-            
+        <Button Name="BtConfigUsuario" Click="BtConfigUsuario_Click" FontSize="20" Height="30" Style="{StaticResource BotonNumeroLogin}">
+            <StackPanel Orientation="Horizontal">
+                <Image 
+                       RenderOptions.BitmapScalingMode="Fant"
+                       Stretch="Fill"
+                       Width="20"
+                       Height="20"
+                       VerticalAlignment="Top"
+                       Margin="0,0,0,0"
+                       HorizontalAlignment="Center" Source="/MonitorWPF;component/Recursos/settings.png" />
+                <TextBlock Text="Config" FontSize="16" VerticalAlignment="Center"></TextBlock>
+            </StackPanel>
+        </Button>
+        <Grid Name="Grid" Grid.Row="1">
+
         </Grid>
-        <TextBox Name="TbCodigo" PreviewKeyUp="TbCodigo_PreviewKeyUp" TextChanged="TbCodigo_TextChanged" Grid.Row="1" FontSize="3"></TextBox>
+        <TextBox Name="TbCodigo" PreviewKeyUp="TbCodigo_PreviewKeyUp" TextChanged="TbCodigo_TextChanged" Grid.Row="2" FontSize="3"></TextBox>
     </Grid>
 </Page>

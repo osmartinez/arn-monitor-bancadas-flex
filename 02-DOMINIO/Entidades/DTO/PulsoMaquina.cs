@@ -14,6 +14,13 @@ namespace Entidades.DTO
         public OperacionesControles Control { get; set; }
         public int Pares { get; set; }
         public DateTime Fecha { get; set; }
+        public DateTime FechaLocal
+        {
+            get
+            {
+                return Fecha.ToLocalTime();
+            }
+        }
         public double Ciclo { get; set; }
         public int PosicionGlobal { get; set; }
         public int IdOperario { get; set; }

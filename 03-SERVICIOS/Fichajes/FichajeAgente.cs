@@ -12,9 +12,12 @@ namespace Fichajes
     {
         private static string UltimaEtiqueta { get; set; } = "";
         private static string CodigoBarquilla { get; set; } = "";
+        private static string CodigoUtillaje { get; set; } = "";
         private static string CodigoMaquina { get; set; } = "";
 
         public static event EventHandler<FichajeAsociacionEventArgs> OnFichajeAsociacion;
+        public static event EventHandler<FichajeUbicacionUtillajeEventArgs> OnFichajeUbicacionUtillaje;
+
         private static DispatcherTimer timer = new DispatcherTimer();
 
         static FichajeAgente()
@@ -36,6 +39,7 @@ namespace Fichajes
         {
             CodigoBarquilla = "";
             CodigoMaquina = "";
+            CodigoUtillaje = "";
             UltimaEtiqueta = "";
         }
 
@@ -48,6 +52,15 @@ namespace Fichajes
             Limpiar();
         }
 
+        private static void FichajeUbicacionUtillaje()
+        {
+            if (OnFichajeUbicacionUtillaje != null)
+            {
+                OnFichajeUbicacionUtillaje(null, new FichajeUbicacionUtillajeEventArgs(CodigoUtillaje, CodigoMaquina));
+            }
+            Limpiar();
+        }
+
         private static bool EsEtiquetaMaquina(string cod)
         {
             return cod.StartsWith("02") || cod.StartsWith("2");
@@ -56,6 +69,11 @@ namespace Fichajes
         private static bool EsEtiquetaBarquilla(string cod)
         {
             return cod.StartsWith("05") || cod.StartsWith("5");
+        } 
+        
+        private static bool EsEtiquetaUtillaje(string cod)
+        {
+            return cod.StartsWith("06") || cod.StartsWith("6");
         }
 
         public static void EtiquetaFichada(string cod)
@@ -72,6 +90,10 @@ namespace Fichajes
                     // maquina
                     MaquinaFichada("0" + cod);
 
+                }
+                else if(cod[0] == '6')
+                {
+                    UtillajeFichado("0" + cod);
                 }
             }
            
@@ -92,6 +114,18 @@ namespace Fichajes
                 CodigoBarquilla = cod;
                 UltimaEtiqueta = CodigoBarquilla;
                 FichajeAsociacion();
+            }
+        }
+
+        private static void UtillajeFichado(string cod)
+        {
+            // cod es codigoetiqueta del utillaje
+
+            if (EsEtiquetaMaquina(UltimaEtiqueta))
+            {
+                CodigoUtillaje = cod;
+                UltimaEtiqueta = CodigoUtillaje;
+                FichajeUbicacionUtillaje();
             }
         }
 

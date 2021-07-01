@@ -69,7 +69,9 @@
     <Compile Include="Select\Operarios\Select.cs" />
     <Compile Include="Select\Puestos\Select.cs" />
     <Compile Include="Select\Tarea\Select.cs" />
+    <Compile Include="Update\Barquillas\Update.cs" />
     <Compile Include="Update\Puestos\Update.cs" />
+    <Compile Include="Update\UtillajesTallasColeccion\Update.cs" />
   </ItemGroup>
   <ItemGroup>
     <EntityDeploy Include="Model.edmx">

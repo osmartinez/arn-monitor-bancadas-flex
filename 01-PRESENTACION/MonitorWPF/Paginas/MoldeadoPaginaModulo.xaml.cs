@@ -48,7 +48,7 @@ namespace MonitorWPF.Paginas
             GridMaquinas.ColumnDefinitions.Add(new ColumnDefinition());
             GridMaquinas.ColumnDefinitions.Add(new ColumnDefinition());
 
-            this.Maquinas = guiOperario.ObtenerMisMaquinas(p);
+            this.Maquinas = guiOperario.ObtenerMisMaquinas(p).OrderBy(x=>x.PosicionLayout).ToList();
 
             for (int i = 0; i < Maquinas.Count / 2; i++)
             {

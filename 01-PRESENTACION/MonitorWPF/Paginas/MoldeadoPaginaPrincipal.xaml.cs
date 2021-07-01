@@ -5,6 +5,7 @@ using Entidades.DTO;
 using Entidades.Eventos;
 using Fichajes;
 using MqttServicio;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -30,9 +31,12 @@ namespace MonitorWPF.Paginas
     /// </summary>
     public partial class MoldeadoPaginaPrincipal : Page
     {
+
         private IGuiConfiguracion guiConfig = new GuiConfiguracion();
         private IDaoTarea daoTarea = new DaoTarea();
         private IDaoPuesto daoPuesto = new DaoPuesto();
+        private IDaoBarquilla daoBarquilla = new DaoBarquilla();
+        private IDaoUtillajeTallaColeccion daoUtc = new DaoUtillajeTallaColeccion();
 
         private DispatcherTimer timerFocus = new DispatcherTimer { Interval = new TimeSpan(0, 0, 2) };
         private DispatcherTimer timerEventoFichaje = new DispatcherTimer { Interval = new TimeSpan(0, 0, 5) };
@@ -51,6 +55,9 @@ namespace MonitorWPF.Paginas
             { "0200000007720","0200000007706"},
             { "0200000007683","0200000007669"}, };
 
+        public event EventHandler<EventArgs> OnAbrirConfiguracionUsuario;
+
+
         public MoldeadoPaginaPrincipal()
         {
             this.InitializeComponent();
@@ -61,6 +68,7 @@ namespace MonitorWPF.Paginas
             timerEventoFichaje.Start();
 
             FichajeAgente.OnFichajeAsociacion += FichajeAgente_OnFichajeAsociacion;
+            FichajeAgente.OnFichajeUbicacionUtillaje += FichajeAgente_OnFichajeUbicacionUtillaje;
             var pantallas = guiConfig.ObtenerPantallas();
 
 
@@ -92,6 +100,18 @@ namespace MonitorWPF.Paginas
                         };
 
                 frames[locali].Navigate(lpp);
+            }
+        }
+
+        private void FichajeAgente_OnFichajeUbicacionUtillaje(object sender, FichajeUbicacionUtillajeEventArgs e)
+        {
+            try
+            {
+                daoUtc.Ubicar(e.CodigoEtiqueta, e.CodigoUbicacion);
+                MqttInformarUbicacion(new CambioUbicacion { CodigoEntidad = e.CodigoEtiqueta, CodigoUbicacion = e.CodigoUbicacion });
+            }catch(Exception ex)
+            {
+                new Log().Escribir(ex);
             }
         }
 
@@ -142,6 +162,7 @@ namespace MonitorWPF.Paginas
                                 bwActualizarCola.DoWork += (se, ev) =>
                                 {
                                     cola = daoPuesto.ActualizarColaTrabajo(evento.CodigoBarquilla, idsTareas, infoBarquillaSeccion.First().Agrupacion ?? 0, maquina.ID, maquina.OperarioACargo.Id, infoBarquillaSeccion.Sum(x => x.Cantidad));
+                                    daoBarquilla.Ubicar(evento.CodigoBarquilla, maquina.CodUbicacion);
                                 };
                                 bwActualizarCola.RunWorkerCompleted += (se, ev) =>
                                 {
@@ -151,6 +172,7 @@ namespace MonitorWPF.Paginas
 
                                 // mqtt
                                 MqttAsociarBarquilla(infoBarquillaSeccion, maquina);
+                                MqttInformarUbicacion(new CambioUbicacion { CodigoEntidad = evento.CodigoBarquilla, CodigoUbicacion = maquina.CodUbicacion });
                             }
                         }
                     }
@@ -164,6 +186,17 @@ namespace MonitorWPF.Paginas
             }
         }
 
+        private void MqttInformarUbicacion(CambioUbicacion cambio)
+        {
+            try
+            {
+                ClienteMqtt.Publicar("/ubicacion", JsonConvert.SerializeObject(cambio), 1);
+            }
+            catch (Exception ex)
+            {
+                new Log().Escribir(ex);
+            }
+        }
         private void MqttAsociarBarquilla(List<SP_BarquillaBuscarInformacionEnSeccion_Result> prepaquete, Maquinas maquina, bool asociacion = true)
         {
             try
@@ -260,6 +293,17 @@ namespace MonitorWPF.Paginas
                 TbCodigo.Clear();
                 FichajeAgente.EtiquetaFichada(codigo);
             }
+        }
+        private void AbrirConfiguracionUsuario()
+        {
+            if (OnAbrirConfiguracionUsuario != null)
+            {
+                OnAbrirConfiguracionUsuario(this, new EventArgs());
+            }
+        }
+        private void BtConfigUsuario_Click(object sender, RoutedEventArgs e)
+        {
+            AbrirConfiguracionUsuario();
         }
     }
 }

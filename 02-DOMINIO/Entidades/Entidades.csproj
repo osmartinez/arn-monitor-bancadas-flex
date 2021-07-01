@@ -1041,6 +1041,7 @@
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="DTO\AsociacionTarea.cs" />
+    <Compile Include="DTO\CambioUbicacion.cs" />
     <Compile Include="DTO\ConsumoPrensa.cs" />
     <Compile Include="DTO\PulsoMaquina.cs" />
     <Compile Include="Enum\ModoMaquina.cs" />
@@ -1048,6 +1049,7 @@
     <Compile Include="Eventos\ColorearEventArgs.cs" />
     <Compile Include="Eventos\ConfiguracionTerminadaEventArgs.cs" />
     <Compile Include="Eventos\FichajeAsociacionEventArgs.cs" />
+    <Compile Include="Eventos\FichajeUbicacionUtillajeEventArgs.cs" />
     <Compile Include="Eventos\ModoMaquinaCambioEventArgs.cs" />
     <Compile Include="Eventos\MqttMensajeRecibidoEventArgs.cs" />
     <Compile Include="Eventos\OperarioEntraEventArgs.cs" />

@@ -90,7 +90,14 @@ namespace MonitorWPF
             }
             else
             {
-                Frame.Navigate(new MoldeadoPaginaPrincipal());
+                MoldeadoPaginaPrincipal mpp = new MoldeadoPaginaPrincipal();
+                mpp.OnAbrirConfiguracionUsuario += (s, e) =>
+                {
+                    var cup = new ConfiguracionUsuarioPrincipal();
+                    cup.OnCerrar += (s2, e2) => { LimpiarPaginas(); CargarAplicacion(); };
+                    Frame.Navigate(cup);
+                };
+                Frame.Navigate(mpp);
             }
         }
 
