@@ -162,7 +162,12 @@ namespace MonitorWPF.Paginas
                                 bwActualizarCola.DoWork += (se, ev) =>
                                 {
                                     cola = daoPuesto.ActualizarColaTrabajo(evento.CodigoBarquilla, idsTareas, infoBarquillaSeccion.First().Agrupacion ?? 0, maquina.ID, maquina.OperarioACargo.Id, infoBarquillaSeccion.Sum(x => x.Cantidad));
-                                    daoBarquilla.Ubicar(evento.CodigoBarquilla, maquina.CodUbicacion);
+                                    Dictionary<int, int> idOrdenesOperaciones = new Dictionary<int, int>();
+                                    foreach (var info in infoBarquillaSeccion)
+                                    {
+                                        idOrdenesOperaciones.Add(info.IdOrden, info.IdOperacion);
+                                    }
+                                    daoBarquilla.Ubicar(idOrdenesOperaciones, maquina.CodSeccion, evento.CodigoBarquilla, maquina.CodUbicacion);
                                 };
                                 bwActualizarCola.RunWorkerCompleted += (se, ev) =>
                                 {

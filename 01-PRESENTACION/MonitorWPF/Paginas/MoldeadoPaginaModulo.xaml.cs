@@ -33,6 +33,7 @@ namespace MonitorWPF.Paginas
         public Operarios Operario { get; set; } = new Operarios { Nombre = "- SIN OPERARIO -" };
         public Pantalla Pantalla { get; set; } = null;
         public List<Maquinas> Maquinas { get; set; } = new List<Maquinas>();
+        public List<PrensaGenericaControl> prensas = new List<PrensaGenericaControl>();
         public MoldeadoPaginaModulo(Operarios op, Pantalla p)
         {
             InitializeComponent();
@@ -40,6 +41,14 @@ namespace MonitorWPF.Paginas
             this.DataContext = this;
             this.BtLogout.OnPulsado += (s, e) =>
             {
+                foreach (var control in GridMaquinas.Children)
+                {
+                    var controlPrensa = control as PrensaGenericaControl;
+                    if (controlPrensa != null)
+                    {
+                        controlPrensa.Desuscribir();
+                    }
+                }
                 OperarioSale();
             };
 
@@ -60,6 +69,7 @@ namespace MonitorWPF.Paginas
                 Maquinas maquina = this.Maquinas[(int)i];
 
                 PrensaGenericaControl pgc = new PrensaGenericaControl(maquina, op);
+                prensas.Add(pgc);
 
                 Grid.SetColumn(pgc, i % 2 == 0?1:0);
                 Grid.SetRow(pgc, (int)(j));
@@ -76,6 +86,7 @@ namespace MonitorWPF.Paginas
         {
             if (OnOperarioSale != null)
             {
+
                 OnOperarioSale(this, new OperarioSaleEventArgs(this.Operario));
             }
         }

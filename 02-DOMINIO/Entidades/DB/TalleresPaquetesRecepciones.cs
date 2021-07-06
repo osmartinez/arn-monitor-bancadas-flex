@@ -21,6 +21,7 @@ namespace Entidades.DB
         public string Talla { get; set; }
         public double Cantidad { get; set; }
         public System.DateTime FechaHoraRecepcion { get; set; }
+        public string CodigoEtiqueta { get; set; }
     
         public virtual OrdenesFabricacion OrdenesFabricacion { get; set; }
         public virtual OrdenesFabricacionOperaciones OrdenesFabricacionOperaciones { get; set; }

@@ -175,7 +175,12 @@ namespace MonitorWPF.Controles
                 ClienteMqtt.Desuscribir(this.topicNormal);
                 ClienteMqtt.Desuscribir(this.topicCalentar);
                 ClienteMqtt.Desuscribir(this.topicAsociarTarea);
-            }catch(Exception ex)
+                this.topicNormal.OnMensajeRecibido -= TopicNormal_OnMensajeRecibido;
+                this.topicCalentar.OnMensajeRecibido -= TopicCalentar_OnMensajeRecibido;
+                this.topicAsociarTarea.OnMensajeRecibido -= TopicAsociarTarea_OnMensajeRecibido;
+
+            }
+            catch (Exception ex)
             {
                 new Log().Escribir(ex);
             }

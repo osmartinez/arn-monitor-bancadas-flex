@@ -25,6 +25,7 @@ namespace Entidades.DB
         public System.DateTime FechaCreacion { get; set; }
         public Nullable<int> NumeroAgrupacion { get; set; }
         public string CodUbicacion { get; set; }
+        public Nullable<System.DateTime> FechaUbicacion { get; set; }
     
         public virtual Ubicaciones Ubicaciones { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

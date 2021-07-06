@@ -10,9 +10,9 @@ namespace Almacenamiento.Implementaciones
 {
     public class DaoBarquilla : IDaoBarquilla
     {
-        public void Ubicar(string codBarquilla, string codUbicacion)
+        public void Ubicar(Dictionary<int,int> idOperacion, string codSeccion,string codBarquilla, string codUbicacion)
         {
-            Update.UbicarBarquilla(codBarquilla, codUbicacion);
+            Update.UbicarBarquilla(idOperacion,codSeccion,codBarquilla, codUbicacion);
         }
     }
 }

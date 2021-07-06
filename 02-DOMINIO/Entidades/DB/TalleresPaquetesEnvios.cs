@@ -22,6 +22,7 @@ namespace Entidades.DB
         public double Cantidad { get; set; }
         public System.DateTime FechaHoraPreparado { get; set; }
         public Nullable<System.DateTime> FechaHoraEnviado { get; set; }
+        public string CodigoEtiqueta { get; set; }
     
         public virtual OrdenesFabricacion OrdenesFabricacion { get; set; }
         public virtual OrdenesFabricacionOperaciones OrdenesFabricacionOperaciones { get; set; }

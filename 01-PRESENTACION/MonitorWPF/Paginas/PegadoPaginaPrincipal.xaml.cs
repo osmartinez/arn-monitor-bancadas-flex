@@ -33,6 +33,7 @@ namespace MonitorWPF.Paginas
         private IGuiConfiguracion guiConfig = new GuiConfiguracion();
         private IDaoTarea daoTarea = new DaoTarea();
         private IDaoPuesto daoPuesto = new DaoPuesto();
+        private IDaoBarquilla daoBarquilla = new DaoBarquilla();
 
         public event EventHandler<EventArgs> OnAbrirConfiguracionUsuario;
 
@@ -151,6 +152,12 @@ namespace MonitorWPF.Paginas
                                 bwActualizarCola.DoWork += (se, ev) =>
                                 {
                                     cola = daoPuesto.ActualizarColaTrabajo(evento.CodigoBarquilla, idsTareas, infoBarquillaSeccion.First().Agrupacion ?? 0, maquina.ID, maquina.OperarioACargo.Id, infoBarquillaSeccion.Sum(x => x.Cantidad));
+                                    Dictionary<int, int> idOrdenesOperaciones = new Dictionary<int, int>();
+                                    foreach (var info in infoBarquillaSeccion)
+                                    {
+                                        idOrdenesOperaciones.Add(info.IdOrden, info.IdOperacion);
+                                    }
+                                    daoBarquilla.Ubicar(idOrdenesOperaciones, maquina.CodSeccion, evento.CodigoBarquilla, maquina.CodUbicacion);
                                 };
                                 bwActualizarCola.RunWorkerCompleted += (se, ev) =>
                                 {

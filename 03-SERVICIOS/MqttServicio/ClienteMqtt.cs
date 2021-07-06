@@ -40,6 +40,7 @@ namespace MqttServicio
         {
             try
             {
+                Desuscribir(topic);
                 client.Subscribe(new string[] { topic.Nombre }, new byte[] { topic.QOS });
                 Topics.Add(topic);
             }

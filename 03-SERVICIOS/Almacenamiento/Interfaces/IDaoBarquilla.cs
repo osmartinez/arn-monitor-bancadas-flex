@@ -8,6 +8,6 @@ namespace Almacenamiento.Interfaces
 {
     public interface IDaoBarquilla
     {
-        void Ubicar(string codBarquilla, string codUbicacion);
+        void Ubicar(Dictionary<int,int> idOperacion, string codSeccion, string codBarquilla, string codUbicacion);
     }
 }

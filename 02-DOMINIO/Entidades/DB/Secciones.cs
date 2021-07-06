@@ -23,6 +23,7 @@ namespace Entidades.DB
             this.OrdenesFabricacionOperaciones = new HashSet<OrdenesFabricacionOperaciones>();
             this.Ubicaciones = new HashSet<Ubicaciones>();
             this.Utillajes = new HashSet<Utillajes>();
+            this.BarquillasConsumos = new HashSet<BarquillasConsumos>();
         }
     
         public string CodSeccion { get; set; }
@@ -50,5 +51,7 @@ namespace Entidades.DB
         public virtual ICollection<Ubicaciones> Ubicaciones { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Utillajes> Utillajes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BarquillasConsumos> BarquillasConsumos { get; set; }
     }
 }

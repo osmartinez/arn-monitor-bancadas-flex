@@ -18,8 +18,10 @@ namespace Entidades.DB
         public int IdContenidoBarquilla { get; set; }
         public int IdOperacionConsumo { get; set; }
         public System.DateTime FechaConsumo { get; set; }
+        public string CodSeccion { get; set; }
     
         public virtual BarquillasContenidos BarquillasContenidos { get; set; }
         public virtual OrdenesFabricacionOperaciones OrdenesFabricacionOperaciones { get; set; }
+        public virtual Secciones Secciones { get; set; }
     }
 }

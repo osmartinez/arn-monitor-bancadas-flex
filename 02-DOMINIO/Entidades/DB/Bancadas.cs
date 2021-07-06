@@ -43,6 +43,7 @@ namespace Entidades.DB
         public Nullable<double> CicloSegundos { get; set; }
         public string Observaciones { get; set; }
         public string CodigoEtiqueta { get; set; }
+        public string Nave { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Bancadas> Bancadas1 { get; set; }

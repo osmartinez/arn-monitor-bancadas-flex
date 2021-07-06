@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="SistemaGlobalPREModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="SistemaGlobalPREModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Agentes">
           <Key>
             <PropertyRef Name="ID" />
@@ -316,6 +316,7 @@
           <Property Name="CicloSegundos" Type="float" />
           <Property Name="Observaciones" Type="nvarchar" MaxLength="100" />
           <Property Name="CodigoEtiqueta" Type="nvarchar" MaxLength="13" />
+          <Property Name="Nave" Type="nvarchar" MaxLength="13" />
         </EntityType>
         <EntityType Name="BancadasConfiguracionesIncidencias">
           <Key>
@@ -367,6 +368,7 @@
           <Property Name="FechaCreacion" Type="datetime" Nullable="false" />
           <Property Name="NumeroAgrupacion" Type="int" />
           <Property Name="CodUbicacion" Type="nvarchar" MaxLength="13" />
+          <Property Name="FechaUbicacion" Type="datetime" />
         </EntityType>
         <EntityType Name="BarquillasConsumos">
           <Key>
@@ -376,6 +378,7 @@
           <Property Name="IdContenidoBarquilla" Type="int" Nullable="false" />
           <Property Name="IdOperacionConsumo" Type="int" Nullable="false" />
           <Property Name="FechaConsumo" Type="datetime" Nullable="false" />
+          <Property Name="CodSeccion" Type="nvarchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="BarquillasContenidos">
           <Key>
@@ -477,11 +480,6 @@
           <Property Name="AgrupacionFecha" Type="datetime" />
         </EntityType>
         <!--Errores durante la generación:
-advertencia 6013: La tabla o vista 'SistemaGlobalPRE.dbo.ContenedoresNoInventario' no tiene definida una clave principal y no es posible inferir ninguna clave principal válida. Esta tabla o vista se ha excluido. Para usar la entidad, necesitará revisar el esquema, agregar las claves correctas y quitar sus comentarios.
-        <EntityType Name="ContenedoresNoInventario">
-          <Property Name="CodigoEtiqueta" Type="nvarchar" MaxLength="50" />
-        </EntityType>-->
-        <!--Errores durante la generación:
 advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.ControlSobrasLog' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="ControlSobrasLog">
           <Key>
@@ -530,12 +528,6 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.ControlSobrasLog' no ti
           <Property Name="Pedido" Type="nvarchar" MaxLength="150" Nullable="false" />
           <Property Name="FechaHoraEntrada" Type="datetime" Nullable="false" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6013: La tabla o vista 'SistemaGlobalPRE.dbo.ERRORLog' no tiene definida una clave principal y no es posible inferir ninguna clave principal válida. Esta tabla o vista se ha excluido. Para usar la entidad, necesitará revisar el esquema, agregar las claves correctas y quitar sus comentarios.
-        <EntityType Name="ERRORLog">
-          <Property Name="Fecha" Type="smalldatetime" />
-          <Property Name="Texto" Type="nvarchar(max)" />
-        </EntityType>-->
         <EntityType Name="EspaciosVagon">
           <Key>
             <PropertyRef Name="IdTractor" />
@@ -689,11 +681,6 @@ advertencia 6013: La tabla o vista 'SistemaGlobalPRE.dbo.ERRORLog' no tiene defi
           <Property Name="CodOF" Type="varchar" MaxLength="50" />
           <Property Name="Materia" Type="varchar" MaxLength="100" />
         </EntityType>
-        <!--Errores durante la generación:
-advertencia 6013: La tabla o vista 'SistemaGlobalPRE.dbo.InventarioCodigosEtiquetas' no tiene definida una clave principal y no es posible inferir ninguna clave principal válida. Esta tabla o vista se ha excluido. Para usar la entidad, necesitará revisar el esquema, agregar las claves correctas y quitar sus comentarios.
-        <EntityType Name="InventarioCodigosEtiquetas">
-          <Property Name="CodigoEtiqueta" Type="nvarchar" MaxLength="13" />
-        </EntityType>-->
         <EntityType Name="InventarioLecturas">
           <Key>
             <PropertyRef Name="Id" />
@@ -1553,6 +1540,7 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
           <Property Name="Cantidad" Type="float" Nullable="false" />
           <Property Name="FechaHoraPreparado" Type="datetime" Nullable="false" />
           <Property Name="FechaHoraEnviado" Type="datetime" />
+          <Property Name="CodigoEtiqueta" Type="nvarchar" MaxLength="13" />
         </EntityType>
         <EntityType Name="TalleresPaquetesRecepciones">
           <Key>
@@ -1565,6 +1553,7 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
           <Property Name="Talla" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Cantidad" Type="float" Nullable="false" />
           <Property Name="FechaHoraRecepcion" Type="datetime" Nullable="false" />
+          <Property Name="CodigoEtiqueta" Type="nvarchar" MaxLength="13" />
         </EntityType>
         <EntityType Name="TalleresUtillaje">
           <Key>
@@ -1912,6 +1901,18 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
             </Principal>
             <Dependent Role="BarquillasConsumos">
               <PropertyRef Name="IdOperacionConsumo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BarquillasConsumos_Secciones">
+          <End Role="Secciones" Type="Self.Secciones" Multiplicity="0..1" />
+          <End Role="BarquillasConsumos" Type="Self.BarquillasConsumos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Secciones">
+              <PropertyRef Name="CodSeccion" />
+            </Principal>
+            <Dependent Role="BarquillasConsumos">
+              <PropertyRef Name="CodSeccion" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -5039,6 +5040,10 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
             <End Role="OrdenesFabricacionOperaciones" EntitySet="OrdenesFabricacionOperaciones" />
             <End Role="BarquillasConsumos" EntitySet="BarquillasConsumos" />
           </AssociationSet>
+          <AssociationSet Name="FK_BarquillasConsumos_Secciones" Association="Self.FK_BarquillasConsumos_Secciones">
+            <End Role="Secciones" EntitySet="Secciones" />
+            <End Role="BarquillasConsumos" EntitySet="BarquillasConsumos" />
+          </AssociationSet>
           <AssociationSet Name="FK_BarquillasContenidos_OrdenesFabricacion" Association="Self.FK_BarquillasContenidos_OrdenesFabricacion">
             <End Role="OrdenesFabricacion" EntitySet="OrdenesFabricacion" />
             <End Role="BarquillasContenidos" EntitySet="BarquillasContenidos" />
@@ -5588,8 +5593,7 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
             <End Role="UtillajesTallasRendimiento" EntitySet="UtillajesTallasRendimiento" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="SistemaGlobalPREModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -5947,6 +5951,7 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
           <NavigationProperty Name="Maquinas" Relationship="Self.FK_Maquinas_Bancadas" FromRole="Bancadas" ToRole="Maquinas" />
           <NavigationProperty Name="OrdenesFabricacionOperacionesTallasCantidad" Relationship="Self.FK_OrdenesFabricacionOperacionesTallasCantidad_Bancadas" FromRole="Bancadas" ToRole="OrdenesFabricacionOperacionesTallasCantidad" />
           <NavigationProperty Name="BancadasConfiguracionesIncidencias" Relationship="Self.FK_PuestosConfiguracionesIncidencias_Bancadas" FromRole="Bancadas" ToRole="BancadasConfiguracionesIncidencias" />
+          <Property Name="Nave" Type="String" MaxLength="13" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="BancadasConfiguracionesIncidencias">
           <Key>
@@ -6003,6 +6008,7 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
           <Property Name="CodUbicacion" Type="String" MaxLength="13" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Ubicaciones" Relationship="Self.FK_Barquillas_Ubicaciones" FromRole="Barquillas" ToRole="Ubicaciones" />
           <NavigationProperty Name="BarquillasContenidos" Relationship="Self.FK_ContenidosBarquillas_Barquillas" FromRole="Barquillas" ToRole="BarquillasContenidos" />
+          <Property Name="FechaUbicacion" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="BarquillasConsumos">
           <Key>
@@ -6014,6 +6020,8 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
           <Property Name="FechaConsumo" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="BarquillasContenidos" Relationship="Self.FK_BarquillasConsumos_BarquillasContenidos" FromRole="BarquillasConsumos" ToRole="BarquillasContenidos" />
           <NavigationProperty Name="OrdenesFabricacionOperaciones" Relationship="Self.FK_BarquillasConsumos_OrdenesFabricacionOperaciones" FromRole="BarquillasConsumos" ToRole="OrdenesFabricacionOperaciones" />
+          <Property Name="CodSeccion" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Secciones" Relationship="SistemaGlobalPREModel.FK_BarquillasConsumos_Secciones" FromRole="BarquillasConsumos" ToRole="Secciones" />
         </EntityType>
         <EntityType Name="BarquillasContenidos">
           <Key>
@@ -7211,6 +7219,7 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
           <NavigationProperty Name="OrdenesFabricacionOperaciones" Relationship="Self.FK_OrdenesFabricacionOperaciones_Secciones" FromRole="Secciones" ToRole="OrdenesFabricacionOperaciones" />
           <NavigationProperty Name="Ubicaciones" Relationship="Self.FK_Ubicaciones_Secciones" FromRole="Secciones" ToRole="Ubicaciones" />
           <NavigationProperty Name="Utillajes" Relationship="Self.FK_Utillajes_Secciones" FromRole="Secciones" ToRole="Utillajes" />
+          <NavigationProperty Name="BarquillasConsumos" Relationship="SistemaGlobalPREModel.FK_BarquillasConsumos_Secciones" FromRole="Secciones" ToRole="BarquillasConsumos" />
         </EntityType>
         <EntityType Name="StockArticulos">
           <Key>
@@ -7306,6 +7315,7 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
           <NavigationProperty Name="OrdenesFabricacion" Relationship="Self.FK_TalleresPaquetesEnvios_OrdenesFabricacion" FromRole="TalleresPaquetesEnvios" ToRole="OrdenesFabricacion" />
           <NavigationProperty Name="OrdenesFabricacionOperaciones" Relationship="Self.FK_TalleresPaquetesEnvios_OrdenesFabricacionOperaciones" FromRole="TalleresPaquetesEnvios" ToRole="OrdenesFabricacionOperaciones" />
           <NavigationProperty Name="Talleres" Relationship="Self.FK_TalleresPaquetesEnvios_Talleres" FromRole="TalleresPaquetesEnvios" ToRole="Talleres" />
+          <Property Name="CodigoEtiqueta" Type="String" MaxLength="13" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="TalleresPaquetesRecepciones">
           <Key>
@@ -7321,6 +7331,7 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
           <NavigationProperty Name="OrdenesFabricacion" Relationship="Self.FK_TalleresPaquetesRecepciones_OrdenesFabricacion" FromRole="TalleresPaquetesRecepciones" ToRole="OrdenesFabricacion" />
           <NavigationProperty Name="OrdenesFabricacionOperaciones" Relationship="Self.FK_TalleresPaquetesRecepciones_OrdenesFabricacionOperaciones" FromRole="TalleresPaquetesRecepciones" ToRole="OrdenesFabricacionOperaciones" />
           <NavigationProperty Name="Talleres" Relationship="Self.FK_TalleresPaquetesRecepciones_Talleres" FromRole="TalleresPaquetesRecepciones" ToRole="Talleres" />
+          <Property Name="CodigoEtiqueta" Type="String" MaxLength="13" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="TicketCalculos">
           <Key>
@@ -10132,10 +10143,10 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
             <Parameter Name="prefix" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SF_Split_NVarChar" IsComposable="true" ReturnType="Collection(SistemaGlobalPREModel.SF_Split_NVarChar_Result)">
-            <Parameter Name="stringToSplit" Mode="In" Type="String" />
+          <Parameter Name="stringToSplit" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="split_tallas" IsComposable="true" ReturnType="Collection(SistemaGlobalPREModel.split_tallas_Result)">
-            <Parameter Name="stringToSplit" Mode="In" Type="String" />
+          <Parameter Name="stringToSplit" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="PasarDatos" />
           <FunctionImport Name="SP_ActualizarGrupoTallas" ReturnType="Collection(String)">
@@ -10150,7 +10161,7 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
             <Parameter Name="LineaPosicion" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="SP_ActualizarPosicionesTareasProgramadasEnMaquina">
-            <Parameter Name="IdMaquina" Mode="In" Type="Int32" />
+          <Parameter Name="IdMaquina" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ActualizarStockArticuloTalla">
             <Parameter Name="Id" Mode="In" Type="Int32" />
@@ -10171,7 +10182,7 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
             <Parameter Name="CodigoArticulo" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ArticulosRutasOperacionesMaterial" ReturnType="Collection(SistemaGlobalPREModel.SP_ArticulosRutasOperacionesMaterial_Result)">
-            <Parameter Name="CodigoArticulo" Mode="In" Type="String" />
+          <Parameter Name="CodigoArticulo" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ArticulosRutasOperacionesOrden" ReturnType="Collection(SistemaGlobalPREModel.SP_ArticulosRutasOperacionesOrden_Result)">
             <Parameter Name="CodigoEmpresa" Mode="In" Type="Int32" />
@@ -10231,22 +10242,22 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
             <Parameter Name="Bloqueante" Mode="In" Type="Boolean" />
           </FunctionImport>
           <FunctionImport Name="SP_BancadaBuscarConfiguracionesIncidenciasPorId" ReturnType="Collection(SistemaGlobalPREModel.SP_BancadaBuscarConfiguracionesIncidenciasPorId_Result)">
-            <Parameter Name="Id" Mode="In" Type="Int32" />
+          <Parameter Name="Id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_BancadaBuscarConfiguracionesPinsPorId" ReturnType="Collection(SistemaGlobalPREModel.SP_BancadaBuscarConfiguracionesPinsPorId_Result)">
-            <Parameter Name="Id" Mode="In" Type="Int32" />
+          <Parameter Name="Id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_BancadaBuscarMaquinasPorId" ReturnType="Collection(SistemaGlobalPREModel.SP_BancadaBuscarMaquinasPorId_Result)">
-            <Parameter Name="Id" Mode="In" Type="Int32" />
+          <Parameter Name="Id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_BancadaBuscarPorCodigoEtiqueta" ReturnType="Collection(SistemaGlobalPREModel.SP_BancadaBuscarPorCodigoEtiqueta_Result)">
-            <Parameter Name="CodigoEtiqueta" Mode="In" Type="String" />
+          <Parameter Name="CodigoEtiqueta" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_BancadaBuscarPorDescripcion" ReturnType="Collection(SistemaGlobalPREModel.SP_BancadaBuscarPorDescripcion_Result)">
-            <Parameter Name="Descripcion" Mode="In" Type="String" />
+          <Parameter Name="Descripcion" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_BancadaBuscarPorId" ReturnType="Collection(SistemaGlobalPREModel.SP_BancadaBuscarPorId_Result)">
-            <Parameter Name="Id" Mode="In" Type="Int32" />
+          <Parameter Name="Id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_BancadaCrear" ReturnType="Collection(SistemaGlobalPREModel.SP_BancadaCrear_Result)">
             <Parameter Name="Descripcion" Mode="In" Type="String" />
@@ -10259,7 +10270,7 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
           </FunctionImport>
           <FunctionImport Name="SP_BancadaObtenerTodos" ReturnType="Collection(SistemaGlobalPREModel.SP_BancadaObtenerTodos_Result)" />
           <FunctionImport Name="SP_BancadaOperariosActuales" ReturnType="Collection(SistemaGlobalPREModel.SP_BancadaOperariosActuales_Result)">
-            <Parameter Name="IdBancada" Mode="In" Type="Int32" />
+          <Parameter Name="IdBancada" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_BancadaRegistroEntradaOperarioPorCodigo" ReturnType="Collection(SistemaGlobalPREModel.SP_BancadaRegistroEntradaOperarioPorCodigo_Result)">
             <Parameter Name="Codigo" Mode="In" Type="String" />
@@ -10278,7 +10289,7 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
             <Parameter Name="CodigoSeccion" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_BarquillaBuscarPorCodigo" ReturnType="Collection(SistemaGlobalPREModel.SP_BarquillaBuscarPorCodigo_Result)">
-            <Parameter Name="CodigoEtiqueta" Mode="In" Type="String" />
+          <Parameter Name="CodigoEtiqueta" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_BarquillaConsumirEnSeccion" ReturnType="Collection(SistemaGlobalPREModel.SP_BarquillaConsumirEnSeccion_Result)">
             <Parameter Name="CodigoEtiqueta" Mode="In" Type="String" />
@@ -10303,83 +10314,83 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
             <Parameter Name="IdOrden" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_BorrarStock">
-            <Parameter Name="IdStock" Mode="In" Type="Int32" />
+          <Parameter Name="IdStock" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_BuscarCodigoArticuloPorIdOrden" ReturnType="Collection(String)">
-            <Parameter Name="IdOrden" Mode="In" Type="Int32" />
+          <Parameter Name="IdOrden" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_BuscarImpresionMarcajePorUtillajeTalla" ReturnType="Collection(SistemaGlobalPREModel.SP_BuscarImpresionMarcajePorUtillajeTalla_Result)">
             <Parameter Name="CodigoUtillaje" Mode="In" Type="String" />
             <Parameter Name="Talla" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_BuscarMaquinaPorCodigo" ReturnType="Collection(SistemaGlobalPREModel.SP_BuscarMaquinaPorCodigo_Result)">
-            <Parameter Name="CodigoMaquina" Mode="In" Type="String" />
+          <Parameter Name="CodigoMaquina" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_BuscarOperacionesPorOrdenFabricacion" ReturnType="Collection(SistemaGlobalPREModel.SP_BuscarOperacionesPorOrdenFabricacion_Result)">
-            <Parameter Name="IdOrden" Mode="In" Type="Int32" />
+          <Parameter Name="IdOrden" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_BuscarOperacionesPorPrepaqueteMaquina" ReturnType="Collection(SistemaGlobalPREModel.SP_BuscarOperacionesPorPrepaqueteMaquina_Result)">
             <Parameter Name="CodigoEtiqueta" Mode="In" Type="String" />
             <Parameter Name="CodigoMaquina" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_BuscarOperacionesTallasPorOperacion" ReturnType="Collection(SistemaGlobalPREModel.SP_BuscarOperacionesTallasPorOperacion_Result)">
-            <Parameter Name="IdOperacion" Mode="In" Type="Int32" />
+          <Parameter Name="IdOperacion" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_BuscarOperacionPorOrdenFabricacionSeccion" ReturnType="Collection(SistemaGlobalPREModel.SP_BuscarOperacionPorOrdenFabricacionSeccion_Result)">
             <Parameter Name="IdOrden" Mode="In" Type="Int32" />
             <Parameter Name="CodSeccion" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_BuscarOrdenFabricacionPorId" ReturnType="Collection(SistemaGlobalPREModel.SP_BuscarOrdenFabricacionPorId_Result)">
-            <Parameter Name="IdOrden" Mode="In" Type="Int32" />
+          <Parameter Name="IdOrden" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_BuscarPaquetePorCodigoEtiqueta" ReturnType="Collection(SistemaGlobalPREModel.SP_BuscarPaquetePorCodigoEtiqueta_Result)">
-            <Parameter Name="CodigoEtiqueta" Mode="In" Type="String" />
+          <Parameter Name="CodigoEtiqueta" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_BuscarPaquetesPorAgrupacion" ReturnType="Collection(SistemaGlobalPREModel.SP_BuscarPaquetesPorAgrupacion_Result)">
-            <Parameter Name="CodigoAgrupacion" Mode="In" Type="String" />
+          <Parameter Name="CodigoAgrupacion" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_BuscarPaquetesPorUbicacion" ReturnType="Collection(SistemaGlobalPREModel.SP_BuscarPaquetesPorUbicacion_Result)">
-            <Parameter Name="CodigoUbicacion" Mode="In" Type="String" />
+          <Parameter Name="CodigoUbicacion" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_BuscarSeccionPorCodigo" ReturnType="Collection(SistemaGlobalPREModel.SP_BuscarSeccionPorCodigo_Result)">
-            <Parameter Name="CodSeccion" Mode="In" Type="String" />
+          <Parameter Name="CodSeccion" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_BuscarStockArticuloEnUbicacion" ReturnType="Collection(SistemaGlobalPREModel.SP_BuscarStockArticuloEnUbicacion_Result)">
             <Parameter Name="CodigoArticulo" Mode="In" Type="String" />
             <Parameter Name="CodUbicacion" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_BuscarStockPorBarquilla" ReturnType="Collection(SistemaGlobalPREModel.SP_BuscarStockPorBarquilla_Result)">
-            <Parameter Name="CodigoBarquilla" Mode="In" Type="String" />
+          <Parameter Name="CodigoBarquilla" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_BuscarStockPorContenedor" ReturnType="Collection(SistemaGlobalPREModel.SP_BuscarStockPorContenedor_Result)">
-            <Parameter Name="CodigoEtiqueta" Mode="In" Type="String" />
+          <Parameter Name="CodigoEtiqueta" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_BuscarStockPorOrdenFabricacion" ReturnType="Collection(SistemaGlobalPREModel.SP_BuscarStockPorOrdenFabricacion_Result)">
-            <Parameter Name="IdOrden" Mode="In" Type="Int32" />
+          <Parameter Name="IdOrden" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_BuscarStockPorOrdenFabricacionOperacion" ReturnType="Collection(SistemaGlobalPREModel.SP_BuscarStockPorOrdenFabricacionOperacion_Result)">
-            <Parameter Name="IdOperacion" Mode="In" Type="Int32" />
+          <Parameter Name="IdOperacion" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_BuscarStockPorPrepaquete" ReturnType="Collection(SistemaGlobalPREModel.SP_BuscarStockPorPrepaquete_Result)">
-            <Parameter Name="CodigoPrepaquete" Mode="In" Type="String" />
+          <Parameter Name="CodigoPrepaquete" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_BuscarStockPorReferencia" ReturnType="Collection(SistemaGlobalPREModel.SP_BuscarStockPorReferencia_Result)">
-            <Parameter Name="CodigoArticulo" Mode="In" Type="String" />
+          <Parameter Name="CodigoArticulo" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_BuscarStockPorUbicacion" ReturnType="Collection(SistemaGlobalPREModel.SP_BuscarStockPorUbicacion_Result)">
-            <Parameter Name="CodigoUbicacion" Mode="In" Type="String" />
+          <Parameter Name="CodigoUbicacion" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_BuscarStockTallasPorStock" ReturnType="Collection(SistemaGlobalPREModel.SP_BuscarStockTallasPorStock_Result)">
-            <Parameter Name="IdStock" Mode="In" Type="Int32" />
+          <Parameter Name="IdStock" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_BuscarTodasMaquinas" ReturnType="Collection(SistemaGlobalPREModel.SP_BuscarTodasMaquinas_Result)" />
           <FunctionImport Name="SP_BuscarTodasMaquinasEnSeccion" ReturnType="Collection(SistemaGlobalPREModel.SP_BuscarTodasMaquinasEnSeccion_Result)">
-            <Parameter Name="CodSeccion" Mode="In" Type="String" />
+          <Parameter Name="CodSeccion" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_BuscarTodasSecciones" ReturnType="Collection(SistemaGlobalPREModel.SP_BuscarTodasSecciones_Result)" />
           <FunctionImport Name="SP_BuscarTodosTalleres" ReturnType="Collection(SistemaGlobalPREModel.SP_BuscarTodosTalleres_Result)" />
           <FunctionImport Name="SP_BuscarUbicacionPorCodigo" ReturnType="Collection(SistemaGlobalPREModel.SP_BuscarUbicacionPorCodigo_Result)">
-            <Parameter Name="CodigoUbicacion" Mode="In" Type="String" />
+          <Parameter Name="CodigoUbicacion" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CambiarDatosPedido">
             <Parameter Name="Pedido" Mode="In" Type="Int32" />
@@ -10447,7 +10458,7 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
             <Parameter Name="FechaFin" Mode="In" Type="DateTime" />
           </FunctionImport>
           <FunctionImport Name="SP_CrearPackinglist" ReturnType="Collection(SistemaGlobalPREModel.SP_CrearPackinglist_Result)">
-            <Parameter Name="Usuario" Mode="In" Type="String" />
+          <Parameter Name="Usuario" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_CrearStock" ReturnType="Collection(SistemaGlobalPREModel.SP_CrearStock_Result)">
             <Parameter Name="CodigoArticulo" Mode="In" Type="String" />
@@ -10495,10 +10506,10 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
             <Parameter Name="Saldos" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_Eliminar_Articulo_ByID">
-            <Parameter Name="ID" Mode="In" Type="Int32" />
+          <Parameter Name="ID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_Eliminar_Articulo_ByReferencia">
-            <Parameter Name="Referencia" Mode="In" Type="String" />
+          <Parameter Name="Referencia" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_EliminarLiquidaciones" ReturnType="Collection(String)">
             <Parameter Name="FechaInicio" Mode="In" Type="DateTime" />
@@ -10571,14 +10582,14 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
             <Parameter Name="owner_id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_IniciarTarea">
-            <Parameter Name="IdTarea" Mode="In" Type="Int32" />
+          <Parameter Name="IdTarea" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_InsertarContenedorPackinglist" ReturnType="Collection(SistemaGlobalPREModel.SP_InsertarContenedorPackinglist_Result)">
             <Parameter Name="IdPackinglist" Mode="In" Type="Int32" />
             <Parameter Name="CodigoEtiqueta" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_InventarioPDA" ReturnType="Collection(String)">
-            <Parameter Name="IdsPaquetes" Mode="In" Type="String" />
+          <Parameter Name="IdsPaquetes" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ListadoConsumosInternos" ReturnType="Collection(SistemaGlobalPREModel.SP_ListadoConsumosInternos_Result)">
             <Parameter Name="Partida" Mode="In" Type="String" />
@@ -10632,16 +10643,16 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
           </FunctionImport>
           <FunctionImport Name="SP_ListadoControlEmpleadosImpresiones" ReturnType="Collection(SistemaGlobalPREModel.SP_ListadoControlEmpleadosImpresiones_Result)" />
           <FunctionImport Name="SP_ListadoControlEntradas" ReturnType="Collection(SistemaGlobalPREModel.SP_ListadoControlEntradas_Result)">
-            <Parameter Name="Fecha" Mode="In" Type="DateTime" />
+          <Parameter Name="Fecha" Mode="In" Type="DateTime" />
           </FunctionImport>
           <FunctionImport Name="SP_ListadoControlEntradasSage" ReturnType="Collection(SistemaGlobalPREModel.SP_ListadoControlEntradasSage_Result)">
-            <Parameter Name="Fecha" Mode="In" Type="DateTime" />
+          <Parameter Name="Fecha" Mode="In" Type="DateTime" />
           </FunctionImport>
           <FunctionImport Name="SP_ListadoControlMovimientosArticulos" ReturnType="Collection(SistemaGlobalPREModel.SP_ListadoControlMovimientosArticulos_Result)">
-            <Parameter Name="Fecha" Mode="In" Type="DateTime" />
+          <Parameter Name="Fecha" Mode="In" Type="DateTime" />
           </FunctionImport>
           <FunctionImport Name="SP_ListadoControlMovimientosUbicacion" ReturnType="Collection(SistemaGlobalPREModel.SP_ListadoControlMovimientosUbicacion_Result)">
-            <Parameter Name="Ubicacion" Mode="In" Type="String" />
+          <Parameter Name="Ubicacion" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ListadoControlParesFabricados" ReturnType="Collection(SistemaGlobalPREModel.SP_ListadoControlParesFabricados_Result)">
             <Parameter Name="Fecha" Mode="In" Type="DateTime" />
@@ -10653,14 +10664,14 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
           </FunctionImport>
           <FunctionImport Name="SP_ListadoControlProductoTerminadoPendienteEnvio" ReturnType="Collection(SistemaGlobalPREModel.SP_ListadoControlProductoTerminadoPendienteEnvio_Result)" />
           <FunctionImport Name="SP_ListadoControlSobras" ReturnType="Collection(SistemaGlobalPREModel.SP_ListadoControlSobras_Result)">
-            <Parameter Name="Fecha" Mode="In" Type="DateTime" />
+          <Parameter Name="Fecha" Mode="In" Type="DateTime" />
           </FunctionImport>
           <FunctionImport Name="SP_ListadoControlSobrasIndividualRango" ReturnType="Collection(SistemaGlobalPREModel.SP_ListadoControlSobrasIndividualRango_Result)">
             <Parameter Name="FechaInicio" Mode="In" Type="DateTime" />
             <Parameter Name="FechaFin" Mode="In" Type="DateTime" />
           </FunctionImport>
           <FunctionImport Name="SP_ListadoControlSobrasObsoletas" ReturnType="Collection(SistemaGlobalPREModel.SP_ListadoControlSobrasObsoletas_Result)">
-            <Parameter Name="meses" Mode="In" Type="Int32" />
+          <Parameter Name="meses" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ListadoControlTodasCajasLeidasOrden" ReturnType="Collection(SistemaGlobalPREModel.SP_ListadoControlTodasCajasLeidasOrden_Result)">
             <Parameter Name="Fecha" Mode="In" Type="DateTime" />
@@ -10668,10 +10679,10 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
             <Parameter Name="CodigoOF" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ListadoControlVentasArneplant" ReturnType="Collection(SistemaGlobalPREModel.SP_ListadoControlVentasArneplant_Result)">
-            <Parameter Name="Fecha" Mode="In" Type="DateTime" />
+          <Parameter Name="Fecha" Mode="In" Type="DateTime" />
           </FunctionImport>
           <FunctionImport Name="SP_ListadoControlVentasSage" ReturnType="Collection(SistemaGlobalPREModel.SP_ListadoControlVentasSage_Result)">
-            <Parameter Name="Fecha" Mode="In" Type="DateTime" />
+          <Parameter Name="Fecha" Mode="In" Type="DateTime" />
           </FunctionImport>
           <FunctionImport Name="SP_ListadoDetalladoFichajesCorteAutomatico" ReturnType="Collection(SistemaGlobalPREModel.SP_ListadoDetalladoFichajesCorteAutomatico_Result)">
             <Parameter Name="Fecha" Mode="In" Type="DateTime" />
@@ -10703,7 +10714,7 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
             <Parameter Name="OrdenFabricacion" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ListarCambiosMolde" ReturnType="Collection(SistemaGlobalPREModel.SP_ListarCambiosMolde_Result)">
-            <Parameter Name="CodSeccion" Mode="In" Type="String" />
+          <Parameter Name="CodSeccion" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_MaquinaActualizarConfiguracionPines" ReturnType="Collection(SistemaGlobalPREModel.SP_MaquinaActualizarConfiguracionPines_Result)">
             <Parameter Name="IdMaquina" Mode="In" Type="Int32" />
@@ -10732,7 +10743,7 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
             <Parameter Name="IdOperarioEjecucion" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_MaquinaColaObtenerTareaEjecucionPorId" ReturnType="Collection(SistemaGlobalPREModel.SP_MaquinaColaObtenerTareaEjecucionPorId_Result)">
-            <Parameter Name="IdMaquina" Mode="In" Type="Int32" />
+          <Parameter Name="IdMaquina" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_MaquinaColaObtenerTareaEjecucionPorIpAutomataPosicion" ReturnType="Collection(SistemaGlobalPREModel.SP_MaquinaColaObtenerTareaEjecucionPorIpAutomataPosicion_Result)">
             <Parameter Name="IpAutomata" Mode="In" Type="String" />
@@ -10746,7 +10757,7 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
             <Parameter Name="CodigoEtiqueta" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_MaquinaDesasociarPuesto">
-            <Parameter Name="IdPuesto" Mode="In" Type="Int32" />
+          <Parameter Name="IdPuesto" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_MaquinaRegistrarDato">
             <Parameter Name="CodigoEtiqueta" Mode="In" Type="String" />
@@ -10789,13 +10800,13 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
             <Parameter Name="Ciclo" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_MaquinaVerColaTrabajoPorCodigo" ReturnType="Collection(SistemaGlobalPREModel.SP_MaquinaVerColaTrabajoPorCodigo_Result)">
-            <Parameter Name="CodigoEtiqueta" Mode="In" Type="String" />
+          <Parameter Name="CodigoEtiqueta" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_MaquinaVerColaTrabajoPorId" ReturnType="Collection(SistemaGlobalPREModel.SP_MaquinaVerColaTrabajoPorId_Result)">
-            <Parameter Name="IdMaquina" Mode="In" Type="Int32" />
+          <Parameter Name="IdMaquina" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_MaterialesObtenerReferencias" ReturnType="Collection(SistemaGlobalPREModel.SP_MaterialesObtenerReferencias_Result)">
-            <Parameter Name="CodMateria" Mode="In" Type="String" />
+          <Parameter Name="CodMateria" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ModificarLiquidaciones">
             <Parameter Name="CodigoEmpresa" Mode="In" Type="Int32" />
@@ -10808,10 +10819,10 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
             <Parameter Name="UITop" Mode="In" Type="Double" />
           </FunctionImport>
           <FunctionImport Name="SP_MoldesObtenerBancadaPorId" ReturnType="Collection(SistemaGlobalPREModel.SP_MoldesObtenerBancadaPorId_Result)">
-            <Parameter Name="IdBancada" Mode="In" Type="Int32" />
+          <Parameter Name="IdBancada" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_MoldesObtenerMaquinasPorIdBancada" ReturnType="Collection(SistemaGlobalPREModel.SP_MoldesObtenerMaquinasPorIdBancada_Result)">
-            <Parameter Name="IdBancada" Mode="In" Type="Int32" />
+          <Parameter Name="IdBancada" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ObtenerAgentesSage" ReturnType="Collection(SistemaGlobalPREModel.SP_ObtenerAgentesSage_Result)">
             <Parameter Name="CodigoEmpresa" Mode="In" Type="Int32" />
@@ -10831,14 +10842,14 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
             <Parameter Name="Cliente" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ObtenerCamposERP" ReturnType="Collection(SistemaGlobalPREModel.SP_ObtenerCamposERP_Result)">
-            <Parameter Name="CodigoOF" Mode="In" Type="Int32" />
+          <Parameter Name="CodigoOF" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ObtenerCantidadProducidaDeOFOTC">
             <Parameter Name="OFOTCId" Mode="In" Type="Int32" />
             <Parameter Name="Consumida" Mode="InOut" Type="Double" />
           </FunctionImport>
           <FunctionImport Name="SP_ObtenerCantidadProducidaEnOFOTCMaquina">
-            <Parameter Name="IdOFOTC" Mode="In" Type="Int32" />
+          <Parameter Name="IdOFOTC" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ObtenerClienteSage" ReturnType="Collection(String)">
             <Parameter Name="CodigoEmpresa" Mode="In" Type="Int32" />
@@ -10889,7 +10900,7 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
             <Parameter Name="LineaOrigen" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ObtenerDescripcionArticulo" ReturnType="Collection(String)">
-            <Parameter Name="CodigoArticulo" Mode="In" Type="String" />
+          <Parameter Name="CodigoArticulo" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ObtenerDetalleTareasMaquina">
             <Parameter Name="IdOFOTC" Mode="In" Type="Int32" />
@@ -10904,16 +10915,16 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
             <Parameter Name="Revision" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ObtenerFamiliasSage" ReturnType="Collection(String)">
-            <Parameter Name="CodigoEmpresa" Mode="In" Type="Int32" />
+          <Parameter Name="CodigoEmpresa" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ObtenerFinTareaMaterialesMaquinasSinCont">
-            <Parameter Name="IdOFOTC" Mode="In" Type="Int32" />
+          <Parameter Name="IdOFOTC" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ObtenerFinTareaProcesosMaquina">
-            <Parameter Name="IdOFOTC" Mode="In" Type="Int32" />
+          <Parameter Name="IdOFOTC" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ObtenerFinTareasMaquina">
-            <Parameter Name="ContenedorCodigoBarras" Mode="In" Type="String" />
+          <Parameter Name="ContenedorCodigoBarras" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ObtenerInformeFaltasModelo" ReturnType="Collection(SistemaGlobalPREModel.SP_ObtenerInformeFaltasModelo_Result)">
             <Parameter Name="Modelo" Mode="In" Type="String" />
@@ -10960,10 +10971,10 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
             <Parameter Name="SuFacturaNumero" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ObtenerMaterialesTareasPendientesMaquina" ReturnType="Collection(SistemaGlobalPREModel.SP_ObtenerMaterialesTareasPendientesMaquina_Result)">
-            <Parameter Name="IdOFTC" Mode="In" Type="Int32" />
+          <Parameter Name="IdOFTC" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ObtenerModeloArticulo" ReturnType="Collection(String)">
-            <Parameter Name="CodigoArticulo" Mode="In" Type="String" />
+          <Parameter Name="CodigoArticulo" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ObtenerOFOTDeOFCYSeccion">
             <Parameter Name="OFCId" Mode="In" Type="Int32" />
@@ -11045,7 +11056,7 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
             <Parameter Name="Ciclo" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ObtenerPowerBI" ReturnType="Collection(SistemaGlobalPREModel.SP_ObtenerPowerBI_Result)">
-            <Parameter Name="IDUsuario" Mode="In" Type="Int32" />
+          <Parameter Name="IDUsuario" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ObtenerStockArticulo" ReturnType="Collection(SistemaGlobalPREModel.SP_ObtenerStockArticulo_Result)">
             <Parameter Name="CodigoEmpresa" Mode="In" Type="Int32" />
@@ -11067,10 +11078,10 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
             <Parameter Name="CodSeccionMaquina" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ObtenerTareasMaquina" ReturnType="Collection(SistemaGlobalPREModel.SP_ObtenerTareasMaquina_Result)">
-            <Parameter Name="MaquinaID" Mode="In" Type="Int32" />
+          <Parameter Name="MaquinaID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ObtenerTareasMolde" ReturnType="Collection(SistemaGlobalPREModel.SP_ObtenerTareasMolde_Result)">
-            <Parameter Name="BancadaID" Mode="In" Type="Int32" />
+          <Parameter Name="BancadaID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ObtenerTareasOrden" ReturnType="Collection(SistemaGlobalPREModel.SP_ObtenerTareasOrden_Result)">
             <Parameter Name="OrdenFabricacion" Mode="In" Type="String" />
@@ -11078,7 +11089,7 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
             <Parameter Name="Revision" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ObtenerTareasOrdenFabricacion" ReturnType="Collection(SistemaGlobalPREModel.SP_ObtenerTareasOrdenFabricacion_Result)">
-            <Parameter Name="OrdenFabricacionID" Mode="In" Type="Int32" />
+          <Parameter Name="OrdenFabricacionID" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_ObtenerTareasPendientesMaquina" ReturnType="Collection(SistemaGlobalPREModel.SP_ObtenerTareasPendientesMaquina_Result)">
             <Parameter Name="MaquinaID" Mode="In" Type="Int32" />
@@ -11089,10 +11100,10 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
             <Parameter Name="CodOF" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ObtenerTareasProgramadasEnMaquina" ReturnType="Collection(SistemaGlobalPREModel.SP_ObtenerTareasProgramadasEnMaquina_Result)">
-            <Parameter Name="CodigoMaquina" Mode="In" Type="String" />
+          <Parameter Name="CodigoMaquina" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ObtenerTareasProgramadasMaquina" ReturnType="Collection(SistemaGlobalPREModel.SP_ObtenerTareasProgramadasMaquina_Result)">
-            <Parameter Name="CodigoMaquina" Mode="In" Type="String" />
+          <Parameter Name="CodigoMaquina" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ObtenerUbicacionesUtillajeBarquilla" ReturnType="Collection(SistemaGlobalPREModel.SP_ObtenerUbicacionesUtillajeBarquilla_Result)">
             <Parameter Name="CodigoPrepaquete" Mode="In" Type="String" />
@@ -11129,13 +11140,13 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
             <Parameter Name="LineaPosicion" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="SP_ObtenerUnidadesPendientesTarea" ReturnType="Collection(Double)">
-            <Parameter Name="IdTarea" Mode="In" Type="Int32" />
+          <Parameter Name="IdTarea" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OperarioBuscarPorCodigo" ReturnType="Collection(SistemaGlobalPREModel.SP_OperarioBuscarPorCodigo_Result)">
-            <Parameter Name="CodigoOperario" Mode="In" Type="String" />
+          <Parameter Name="CodigoOperario" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_OperarioBuscarPorId" ReturnType="Collection(SistemaGlobalPREModel.SP_OperarioBuscarPorId_Result)">
-            <Parameter Name="IdOperario" Mode="In" Type="Int32" />
+          <Parameter Name="IdOperario" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OrdenesFabricacionPlanificadas" ReturnType="Collection(SistemaGlobalPREModel.SP_OrdenesFabricacionPlanificadas_Result)">
             <Parameter Name="NumeroPedido" Mode="In" Type="Int32" />
@@ -11157,16 +11168,16 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
             <Parameter Name="CodSeccion" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_OrdenFabricacionObtenerOperacionesPorBarquilla" ReturnType="Collection(SistemaGlobalPREModel.SP_OrdenFabricacionObtenerOperacionesPorBarquilla_Result)">
-            <Parameter Name="CodigoEtiqueta" Mode="In" Type="String" />
+          <Parameter Name="CodigoEtiqueta" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_OrdenFabricacionObtenerTallasArticulo" ReturnType="Collection(String)">
-            <Parameter Name="Id" Mode="In" Type="Int32" />
+          <Parameter Name="Id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OrdenFabricacionOperacionBuscarMaterias" ReturnType="Collection(SistemaGlobalPREModel.SP_OrdenFabricacionOperacionBuscarMaterias_Result)">
-            <Parameter Name="IdOperacion" Mode="In" Type="Int32" />
+          <Parameter Name="IdOperacion" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_OrdenFabricacionOperacionBuscarPorId" ReturnType="Collection(SistemaGlobalPREModel.SP_OrdenFabricacionOperacionBuscarPorId_Result)">
-            <Parameter Name="IdOperacion" Mode="In" Type="Int32" />
+          <Parameter Name="IdOperacion" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_PaqueteGenerarConsumoInterno" ReturnType="Collection(SistemaGlobalPREModel.SP_PaqueteGenerarConsumoInterno_Result)">
             <Parameter Name="IdPaquete" Mode="In" Type="Int32" />
@@ -11184,10 +11195,10 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
             <Parameter Name="CodigoSeccion" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_PrepaqueteBuscarPorCodigo" ReturnType="Collection(SistemaGlobalPREModel.SP_PrepaqueteBuscarPorCodigo_Result)">
-            <Parameter Name="CodigoEtiqueta" Mode="In" Type="String" />
+          <Parameter Name="CodigoEtiqueta" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_PrepaqueteBuscarTareaMaquinas" ReturnType="Collection(SistemaGlobalPREModel.SP_PrepaqueteBuscarTareaMaquinas_Result)">
-            <Parameter Name="CodigoEtiqueta" Mode="In" Type="String" />
+          <Parameter Name="CodigoEtiqueta" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_ProgramarTareaPC">
             <Parameter Name="IdTareas" Mode="In" Type="String" />
@@ -11286,7 +11297,7 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
             <Parameter Name="new_diagramname" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_StockArticuloVerificar">
-            <Parameter Name="Id" Mode="In" Type="Int32" />
+          <Parameter Name="Id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_TodasTareasFinalizadas" ReturnType="Collection(Boolean)">
             <Parameter Name="OrdenFabricacionCodigo" Mode="In" Type="String" />
@@ -11310,24 +11321,28 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
           </FunctionImport>
           <FunctionImport Name="sp_upgraddiagrams" />
           <FunctionImport Name="SP_UtillajeTallaColeccionBuscarPorBarquilla" ReturnType="Collection(SistemaGlobalPREModel.SP_UtillajeTallaColeccionBuscarPorBarquilla_Result)">
-            <Parameter Name="CodigoEtiqueta" Mode="In" Type="String" />
+          <Parameter Name="CodigoEtiqueta" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_UtillajeTallaColeccionBuscarPorCodUtillaje" ReturnType="Collection(SistemaGlobalPREModel.SP_UtillajeTallaColeccionBuscarPorCodUtillaje_Result)">
-            <Parameter Name="CodUtillaje" Mode="In" Type="String" />
+          <Parameter Name="CodUtillaje" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_UtillajeTallaColeccionBuscarPorIdOperacion" ReturnType="Collection(SistemaGlobalPREModel.SP_UtillajeTallaColeccionBuscarPorIdOperacion_Result)">
-            <Parameter Name="IdOperacion" Mode="In" Type="Int32" />
+          <Parameter Name="IdOperacion" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="SP_UtillajeTallaColeccionUbicar" ReturnType="Collection(SistemaGlobalPREModel.SP_UtillajeTallaColeccionUbicar_Result)">
             <Parameter Name="CodUbicacion" Mode="In" Type="String" />
             <Parameter Name="CodigoEtiqueta" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_VaciarAgrupacion" ReturnType="Collection(SistemaGlobalPREModel.SP_VaciarAgrupacion_Result)">
-            <Parameter Name="CodigoAgrupacion" Mode="In" Type="String" />
+          <Parameter Name="CodigoAgrupacion" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_VaciarUbicacion" ReturnType="Collection(SistemaGlobalPREModel.SP_VaciarUbicacion_Result)">
-            <Parameter Name="CodigoUbicacion" Mode="In" Type="String" />
+          <Parameter Name="CodigoUbicacion" Mode="In" Type="String" />
           </FunctionImport>
+          <AssociationSet Name="FK_BarquillasConsumos_Secciones" Association="SistemaGlobalPREModel.FK_BarquillasConsumos_Secciones">
+            <End Role="Secciones" EntitySet="Secciones" />
+            <End Role="BarquillasConsumos" EntitySet="BarquillasConsumos" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="SP_AgruparContenedor_Result">
           <Property Type="String" Name="CodigoEtiqueta" Nullable="false" MaxLength="13" />
@@ -14163,6 +14178,18 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
           <Property Type="Int16" Name="AgrupacionPosicionContenedor" Nullable="true" />
           <Property Type="DateTime" Name="AgrupacionFecha" Nullable="true" Precision="23" />
         </ComplexType>
+        <Association Name="FK_BarquillasConsumos_Secciones">
+          <End Type="SistemaGlobalPREModel.Secciones" Role="Secciones" Multiplicity="0..1" />
+          <End Type="SistemaGlobalPREModel.BarquillasConsumos" Role="BarquillasConsumos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Secciones">
+              <PropertyRef Name="CodSeccion" />
+            </Principal>
+            <Dependent Role="BarquillasConsumos">
+              <PropertyRef Name="CodSeccion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -14481,6 +14508,7 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
           <EntitySetMapping Name="Bancadas">
             <EntityTypeMapping TypeName="SistemaGlobalPREModel.Bancadas">
               <MappingFragment StoreEntitySet="Bancadas">
+                <ScalarProperty Name="Nave" ColumnName="Nave" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
                 <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
@@ -14549,6 +14577,7 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
           <EntitySetMapping Name="Barquillas">
             <EntityTypeMapping TypeName="SistemaGlobalPREModel.Barquillas">
               <MappingFragment StoreEntitySet="Barquillas">
+                <ScalarProperty Name="FechaUbicacion" ColumnName="FechaUbicacion" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="CodigoEtiqueta" ColumnName="CodigoEtiqueta" />
                 <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
@@ -14560,6 +14589,7 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
           <EntitySetMapping Name="BarquillasConsumos">
             <EntityTypeMapping TypeName="SistemaGlobalPREModel.BarquillasConsumos">
               <MappingFragment StoreEntitySet="BarquillasConsumos">
+                <ScalarProperty Name="CodSeccion" ColumnName="CodSeccion" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="IdContenidoBarquilla" ColumnName="IdContenidoBarquilla" />
                 <ScalarProperty Name="IdOperacionConsumo" ColumnName="IdOperacionConsumo" />
@@ -15723,6 +15753,7 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
           <EntitySetMapping Name="TalleresPaquetesEnvios">
             <EntityTypeMapping TypeName="SistemaGlobalPREModel.TalleresPaquetesEnvios">
               <MappingFragment StoreEntitySet="TalleresPaquetesEnvios">
+                <ScalarProperty Name="CodigoEtiqueta" ColumnName="CodigoEtiqueta" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="IdTaller" ColumnName="IdTaller" />
                 <ScalarProperty Name="IdOrdenFabricacion" ColumnName="IdOrdenFabricacion" />
@@ -15737,6 +15768,7 @@ advertencia 6002: La tabla o vista 'SistemaGlobalPRE.dbo.MaquinasTiposIncidencia
           <EntitySetMapping Name="TalleresPaquetesRecepciones">
             <EntityTypeMapping TypeName="SistemaGlobalPREModel.TalleresPaquetesRecepciones">
               <MappingFragment StoreEntitySet="TalleresPaquetesRecepciones">
+                <ScalarProperty Name="CodigoEtiqueta" ColumnName="CodigoEtiqueta" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="IdTaller" ColumnName="IdTaller" />
                 <ScalarProperty Name="IdOrdenFabricacion" ColumnName="IdOrdenFabricacion" />

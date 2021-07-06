@@ -24,6 +24,5 @@ namespace Entidades.DB
     
         public virtual MaquinasTipos MaquinasTipos { get; set; }
         public virtual Operaciones Operaciones { get; set; }
-
     }
 }
