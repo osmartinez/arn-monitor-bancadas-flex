@@ -20,8 +20,10 @@ namespace Entidades.DB
         public SistemaGlobalPREEntities()
             : base("name=SistemaGlobalPREEntities")
         {
+            ((IObjectContextAdapter)this).ObjectContext.CommandTimeout = 300; // seconds
+
         }
-    
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             throw new UnintentionalCodeFirstException();

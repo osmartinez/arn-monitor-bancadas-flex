@@ -63,9 +63,18 @@ namespace SistemaGlobal.Update.Puestos
                     if (trabajoEjecucionActual != null)
                     {
                         // lo desubico
-                        var barquilla = db.Barquillas.FirstOrDefault(x => x.CodigoEtiqueta == trabajoEjecucionActual.CodigoEtiquetaFichada);
-                        barquilla.CodUbicacion = null;
+                        var barquillaAntigua = db.Barquillas.FirstOrDefault(x => x.CodigoEtiqueta == trabajoEjecucionActual.CodigoEtiquetaFichada);
+                        //barquilla.CodUbicacion = null;
                     }
+
+
+                    var barquillaNueva = db.Barquillas.FirstOrDefault(x => x.CodigoEtiqueta == codigoBarquilla);
+                    var maquina = db.Maquinas.FirstOrDefault(x => x.ID == idMaquina);
+                    if (barquillaNueva != null && maquina != null && maquina.CodUbicacion != null)
+                    {
+                        barquillaNueva.CodUbicacion = maquina.CodUbicacion;
+                    }
+
 
                     // elimino toda la cola
                     db.MaquinasColasTrabajo.RemoveRange(db.MaquinasColasTrabajo.Where(x => x.IdMaquina == idMaquina).ToList());

@@ -13,7 +13,21 @@ namespace Entidades.Util
         public string Nombre { get; set; }
         public int IndiceIdTopic { get; set; }
         public int IndiceTipoBancada { get; set; }
-        public event EventHandler<MqttMensajeRecibidoEventArgs> OnMensajeRecibido;
+        private event EventHandler<MqttMensajeRecibidoEventArgs> onMensajeRecibido;
+        public event EventHandler<MqttMensajeRecibidoEventArgs> OnMensajeRecibido
+        {
+            add
+            {
+                if (onMensajeRecibido == null || !onMensajeRecibido.GetInvocationList().Contains(value))
+                {
+                    onMensajeRecibido += value;
+                }
+            }
+            remove
+            {
+                onMensajeRecibido -= value;
+            }
+        }
         public byte QOS { get; set; }
         public Topic(string nombre)
         {
@@ -30,9 +44,9 @@ namespace Entidades.Util
 
         public void MensajeRecibido(string cuerpo)
         {
-            if (OnMensajeRecibido != null)
+            if (onMensajeRecibido != null)
             {
-                OnMensajeRecibido(this, new MqttMensajeRecibidoEventArgs(this.Nombre, cuerpo, this));
+                onMensajeRecibido(this, new MqttMensajeRecibidoEventArgs(this.Nombre, cuerpo, this));
             }
         }
 

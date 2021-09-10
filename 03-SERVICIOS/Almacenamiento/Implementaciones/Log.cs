@@ -26,7 +26,7 @@ namespace Almacenamiento.Implementaciones
             var frame = st.GetFrame(0);
             int line = frame.GetFileLineNumber();
             string filename = frame.GetFileName();
-            this.EscribirConEstilo(string.Format("{0}@{1} {2}",filename,line,ex.ToString()));
+            this.EscribirConEstilo(string.Format("{0}@{1} {2}",filename,line,ex.StackTrace));
         }
 
         public string Leer()
