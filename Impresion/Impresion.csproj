@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{599A1668-B433-4515-BD24-4831535118AF}</ProjectGuid>
+    <ProjectGuid>{F6EF0577-8540-4DA1-B672-3FC76B7E2C54}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MqttServicio</RootNamespace>
-    <AssemblyName>MqttServicio</AssemblyName>
+    <RootNamespace>Impresion</RootNamespace>
+    <AssemblyName>Impresion</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -31,14 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MQTTnet, Version=3.0.16.0, Culture=neutral, PublicKeyToken=b69712f52770c0a7, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MQTTnet.3.0.16\lib\net461\MQTTnet.dll</HintPath>
-    </Reference>
-    <Reference Include="MQTTnet.Extensions.ManagedClient, Version=3.0.16.0, Culture=neutral, PublicKeyToken=b69712f52770c0a7, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MQTTnet.Extensions.ManagedClient.3.0.16\lib\net461\MQTTnet.Extensions.ManagedClient.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,25 +42,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClienteMqtt.cs" />
+    <Compile Include="Class1.cs" />
+    <Compile Include="Imprime.cs" />
+    <Compile Include="ImprimirTicketTrabajo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\02-DOMINIO\Entidades\Entidades.csproj">
+    <ProjectReference Include="..\02-DOMINIO\Entidades\Entidades.csproj">
       <Project>{C44038D3-26C5-43D3-95B9-83E2FFB38118}</Project>
       <Name>Entidades</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Networking\Networking.csproj">
-      <Project>{A790A629-782F-40EB-94B7-E174683104E9}</Project>
-      <Name>Networking</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Almacenamiento\Almacenamiento.csproj">
-      <Project>{03502C6C-D39B-466E-94DF-365DFED54775}</Project>
-      <Name>Almacenamiento</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

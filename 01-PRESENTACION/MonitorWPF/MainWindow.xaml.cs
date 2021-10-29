@@ -106,6 +106,8 @@ namespace MonitorWPF
             try
             {
                 ClienteMqtt.Cerrar();
+               // Store.TCPCliente.Desconectar();
+               // Store.TCPServidor.Desconectar();
             }
             catch(Exception ex)
             {

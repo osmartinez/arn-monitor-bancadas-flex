@@ -34,7 +34,7 @@
     <PublisherName>Arneplant</PublisherName>
     <SuiteName>iot</SuiteName>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>59</ApplicationRevision>
+    <ApplicationRevision>107</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -71,6 +71,12 @@
   <PropertyGroup>
     <SignManifests>true</SignManifests>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
@@ -86,6 +92,9 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="QRCoder, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\QRCoder.1.4.1\lib\net40\QRCoder.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -109,6 +118,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controles\QRLocal.xaml.cs">
+      <DependentUpon>QRLocal.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Paginas\ConfiguracionPaginaPrincipal2.xaml.cs">
       <DependentUpon>ConfiguracionPaginaPrincipal2.xaml</DependentUpon>
     </Compile>
@@ -118,6 +130,7 @@
     <Compile Include="Paginas\DetallesPrensaPagina.xaml.cs">
       <DependentUpon>DetallesPrensaPagina.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Store.cs" />
     <Compile Include="Ventanas\Loader.xaml.cs">
       <DependentUpon>Loader.xaml</DependentUpon>
     </Compile>
@@ -137,6 +150,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controles\PrimaTiempoRealControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controles\QRLocal.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -303,6 +320,14 @@
     <ProjectReference Include="..\..\05-UTIL\Extensiones\Extensiones.csproj">
       <Project>{04ac0354-5c9b-46cb-b96e-ab7030de1f2f}</Project>
       <Name>Extensiones</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Impresion\Impresion.csproj">
+      <Project>{F6EF0577-8540-4DA1-B672-3FC76B7E2C54}</Project>
+      <Name>Impresion</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\TCPService\TCPService.csproj">
+      <Project>{D2C39169-9738-492E-BFD4-8C6300583627}</Project>
+      <Name>TCPService</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

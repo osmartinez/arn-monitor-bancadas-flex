@@ -41,5 +41,15 @@ namespace Almacenamiento.Implementaciones
         {
             return Select.ObtenerHistoricoParesOperario(idOperario, ipAutomata, posicion, fechaIni, fechaFin);
         }
+
+        public List<MaquinasRegistrosDatos> ObtenerHistoricoParesOperario(int idOperario, DateTime fechaIni, DateTime fechaFin)
+        {
+            return Select.ObtenerHistoricoParesOperario(idOperario, fechaIni, fechaFin);
+        }
+
+        public List<OperacionesControles> ObtenerOperacionesControles()
+        {
+            return Select.ObtenerOperacionesControles();
+        }
     }
 }

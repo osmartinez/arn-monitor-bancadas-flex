@@ -12,6 +12,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,6 +24,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using TCPService;
 
 namespace MonitorWPF.Paginas
 {
@@ -67,6 +69,10 @@ namespace MonitorWPF.Paginas
             timerFocus.Start();
             timerEventoFichaje.Start();
 
+            SuscribirTopicLecturaPDA();
+
+            ClienteMqtt.OnConectado += ClienteMqtt_OnConectado;
+
             FichajeAgente.OnFichajeAsociacion += FichajeAgente_OnFichajeAsociacion;
             FichajeAgente.OnFichajeUbicacionUtillaje += FichajeAgente_OnFichajeUbicacionUtillaje;
             var pantallas = guiConfig.ObtenerPantallas();
@@ -103,13 +109,84 @@ namespace MonitorWPF.Paginas
             }
         }
 
+        private void SuscribirTopicLecturaPDA()
+        {
+            try
+            {
+
+
+                /*Store.TCPServidor.OnMensajeRecibido += (s, ev) =>
+                {
+                    MensajeTCP mensaje = AnalizadorMensajes.ObtenerMensaje(ev.Mensaje);
+                    if(mensaje != null)
+                    {
+                        switch (mensaje.Tipo)
+                        {
+                            case Entidades.Enum.TipoMensajeTCP.cambiarIpPda:
+                                {
+                                    Store.TCPCliente.Conectar((mensaje as MensajeTCPCambioIpPda).Ip);
+                                    break;
+                                }
+
+                            case Entidades.Enum.TipoMensajeTCP.fichaje:
+                                {
+                                    MensajeTCPFichaje mensajeFichaje = mensaje as MensajeTCPFichaje;
+                                    FichajeAgente.EtiquetaFichada(mensajeFichaje.CodigoMaquina);
+                                    FichajeAgente.EtiquetaFichada(mensajeFichaje.CodigoBarquilla);
+                                    break;
+                                }
+                            default: { break; }
+                        }
+                    }
+                    
+                };*/
+
+                Entidades.Util.Topic topicLectura = new Entidades.Util.Topic("/moldeado/pantalla/" + ClienteMqtt.clientIp + "/lectura", (byte)1);
+                topicLectura.OnMensajeRecibido += (se, ev) =>
+                {
+                    /* LecturaPDA lectura = JsonConvert.DeserializeObject<LecturaPDA>(ev.Cuerpo);
+                     FichajeAgente.EtiquetaFichada(lectura.CodigoMaquina);
+                     FichajeAgente.EtiquetaFichada(lectura.CodigoBarquilla);*/
+                    string[] partes = ev.Cuerpo.Split(';');
+                    if(partes.Length == 3)
+                    {
+                        FichajeAgente.EtiquetaFichada(partes[1].Trim());
+                        FichajeAgente.EtiquetaFichada(partes[2].Trim());
+                        
+                    }
+
+                };
+
+                Entidades.Util.Topic topicHojaProduccion = new Entidades.Util.Topic("/moldeado/pantalla/" + ClienteMqtt.clientIp + "/hojaProduccion", (byte)1);
+                topicHojaProduccion.OnMensajeRecibido += (se, ev) =>
+                {
+                    if (Store.Operario != null)
+                        ClienteMqtt.Publicar(string.Format("/operario/imprimir/moldeado/hojaProduccion"), "{\"IdOperario\": " + Store.Operario.Id + "}", 2);
+
+                };
+                ClienteMqtt.Suscribir(topicLectura);
+                ClienteMqtt.Suscribir(topicHojaProduccion);
+
+            }
+            catch (Exception ex)
+            {
+                new Log().Escribir(ex);
+            }
+        }
+
+        private void ClienteMqtt_OnConectado(object sender, EventArgs e)
+        {
+            SuscribirTopicLecturaPDA();
+        }
+
         private void FichajeAgente_OnFichajeUbicacionUtillaje(object sender, FichajeUbicacionUtillajeEventArgs e)
         {
             try
             {
                 daoUtc.Ubicar(e.CodigoEtiqueta, e.CodigoUbicacion);
                 MqttInformarUbicacion(new CambioUbicacion { CodigoEntidad = e.CodigoEtiqueta, CodigoUbicacion = e.CodigoUbicacion });
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 new Log().Escribir(ex);
             }
@@ -141,6 +218,7 @@ namespace MonitorWPF.Paginas
                     }
                     if (maquina != null)
                     {
+                        maquina.FichajeMaquina(evento);
                         var infoBarquillaSeccion = daoTarea.BuscarInformacionBarquilla(evento.CodigoBarquilla, maquina.CodSeccion);
                         if (infoBarquillaSeccion.Any())
                         {

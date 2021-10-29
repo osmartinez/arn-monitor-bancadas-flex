@@ -39,6 +39,31 @@ namespace SistemaGlobal.Select.Tarea
             }
         }
 
+        public static List<MaquinasRegistrosDatos> ObtenerHistoricoParesOperario(int idOperario, DateTime fechaInicio, DateTime fechaFin)
+        {
+            fechaInicio = fechaInicio.ToUniversalTime();
+            fechaFin = fechaFin.ToUniversalTime();
+            using (SistemaGlobalPREEntities db = new SistemaGlobalPREEntities())
+            {
+                var registros =
+                db.MaquinasRegistrosDatos
+                    .Where(x => x.IdOperario == idOperario &&
+                (fechaInicio <= x.Fecha && x.Fecha <= fechaFin)).ToList();
+
+                foreach (var registro in registros)
+                {
+                    if (registro.IdTarea != 0)
+                    {
+                        registro.OrdenesFabricacionOperacionesTallasCantidad = db.OrdenesFabricacionOperacionesTallasCantidad
+                            .Include("OrdenesFabricacionOperacionesTallas.OrdenesFabricacionOperaciones.OrdenesFabricacion")
+                            .FirstOrDefault(x => x.ID == registro.IdTarea);
+                    }
+                }
+
+                return registros;
+            }
+        }
+
         public static List<MaquinasRegistrosDatos> ObtenerHistoricoParesOperario(int idOperario, string ipAutomata, int posicion, DateTime fechaInicio, DateTime fechaFin)
         {
             fechaInicio = fechaInicio.ToUniversalTime();
@@ -63,6 +88,14 @@ namespace SistemaGlobal.Select.Tarea
                 }
 
                 return registros;
+            }
+        }
+
+        public static List<OperacionesControles> ObtenerOperacionesControles()
+        {
+            using (SistemaGlobalPREEntities db = new SistemaGlobalPREEntities())
+            {
+                return db.OperacionesControles.Include("MaquinasTipos.Maquinas").Include("Operaciones").ToList();
             }
         }
     }

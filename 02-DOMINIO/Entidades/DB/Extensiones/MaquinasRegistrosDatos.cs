@@ -8,6 +8,7 @@ namespace Entidades.DB
 {
     public partial class MaquinasRegistrosDatos
     {
+        public int IdOperacionMaestra { get; set; }
         public OrdenesFabricacionOperacionesTallasCantidad OrdenesFabricacionOperacionesTallasCantidad { get; set; }
         public int IdMaquina { get; set; }
 

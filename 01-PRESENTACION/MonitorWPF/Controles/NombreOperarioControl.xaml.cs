@@ -37,6 +37,7 @@ namespace MonitorWPF.Controles
         public void SetOperario (Operarios op)
         {
             Operario = op;
+            Store.Operario = op;
             Notifica("Operario");
         }
     }

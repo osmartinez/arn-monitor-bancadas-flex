@@ -17,6 +17,7 @@ namespace Entidades.DB
         public event EventHandler OnInfoEjecucionActualizada;
         public event EventHandler<ColorearEventArgs> OnPeticionColorear;
         public event EventHandler<ModoMaquinaCambioEventArgs> OnModoCambiado;
+        public event EventHandler<FichajeAsociacionEventArgs> OnFichajeMaquina;
 
         private const double COEF_VARIACION = 0.03;
 
@@ -341,6 +342,14 @@ namespace Entidades.DB
             if (OnModoCambiado != null)
             {
                 OnModoCambiado(this, new ModoMaquinaCambioEventArgs(modo));
+            }
+        }
+
+        public void FichajeMaquina(FichajeAsociacionEventArgs ev)
+        {
+            if (OnFichajeMaquina != null)
+            {
+                OnFichajeMaquina(this, ev);
             }
         }
 

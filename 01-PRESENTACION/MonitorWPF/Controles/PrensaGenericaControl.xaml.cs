@@ -77,6 +77,7 @@ namespace MonitorWPF.Controles
             Maquina.OnParesConsumidos += Maquina_OnParesConsumidos;
             Maquina.OnInfoEjecucionActualizada += Maquina_OnInfoEjecucionActualizada;
             Maquina.OnModoCambiado += Maquina_OnModoCambiado;
+            Maquina.OnFichajeMaquina += Maquina_OnFichajeMaquina;
             this.PreviewMouseUp += PrensaLayout_PreviewMouseUp;
 
             this.timerCalentamiento = new DispatcherTimer();
@@ -86,7 +87,7 @@ namespace MonitorWPF.Controles
             this.timerInactividad.Interval = new TimeSpan(0, 10, 0);
             this.timerInactividad.Tick += TimerInactividad_Tick;
             this.timerLimiteCaja = new DispatcherTimer();
-            this.timerLimiteCaja.Interval = new TimeSpan(0, 0, 10);
+            this.timerLimiteCaja.Interval = new TimeSpan(0, 0, 30);
             this.timerLimiteCaja.Tick += TimerLimiteCaja_Tick;
 
             this.timerLimiteCaja.Start();
@@ -120,9 +121,10 @@ namespace MonitorWPF.Controles
                     this.Maquina.IpAutomata = maquinaDb.IpAutomata;
                     this.Maquina.Posicion = maquinaDb.Posicion;
                     this.Maquina.PosicionGlobal = maquinaDb.PosicionGlobal;
-                    this.topicNormal = new Topic(string.Format("/{0}/plc/{1}/normal", maquina.Tipo, maquina.IpAutomata), (byte)2);
-                    this.topicCalentar = new Topic(string.Format("/{0}/plc/{1}/calentar", maquina.Tipo, maquina.IpAutomata), (byte)1);
-                    this.topicAsociarTarea = new Topic(string.Format("/{0}/plc/{1}/asociarTarea", maquina.Tipo, maquina.IpAutomata), (byte)1);
+
+                    this.topicNormal = new Topic(string.Format("/{0}/plc/{1}/normal", maquina.Tipo, maquina.IpAutomata), (byte)2, this.Maquina.Nombre);
+                    this.topicCalentar = new Topic(string.Format("/{0}/plc/{1}/calentar", maquina.Tipo, maquina.IpAutomata), (byte)1, this.Maquina.Nombre);
+                    this.topicAsociarTarea = new Topic(string.Format("/{0}/plc/{1}/asociarTarea", maquina.Tipo, maquina.IpAutomata), (byte)1, this.Maquina.Nombre);
                     this.topicNormal.OnMensajeRecibido += TopicNormal_OnMensajeRecibido;                    
                     this.topicCalentar.OnMensajeRecibido += TopicCalentar_OnMensajeRecibido;
                     this.topicAsociarTarea.OnMensajeRecibido += TopicAsociarTarea_OnMensajeRecibido;
@@ -159,6 +161,12 @@ namespace MonitorWPF.Controles
             {
                 new Log().Escribir(ex);
             }
+
+        }
+
+        private void Maquina_OnFichajeMaquina(object sender, Entidades.Eventos.FichajeAsociacionEventArgs e)
+        {
+            ClienteMqtt.Publicar(string.Format("/{0}/pantalla/{1}/desobrepasado", Maquina.Tipo, ClienteMqtt.clientIp), string.Format("{0};{1}/{2};", Maquina.Nombre, this.Maquina.CantidadCaja, this.Maquina.CantidadCajaRealizada), 2);
 
         }
 
@@ -208,7 +216,8 @@ namespace MonitorWPF.Controles
             try
             {
 
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 new Log().Escribir(ex);
 
@@ -307,11 +316,42 @@ namespace MonitorWPF.Controles
 
         private void TimerLimiteCaja_Tick(object sender, EventArgs e)
         {
-            if (this.Maquina.Modo == Entidades.Enum.ModoMaquina.Normal &&
-                this.Maquina.CantidadCaja <= this.Maquina.CantidadCajaRealizada && !inactiva)
+            try
             {
-                PonerColorError();
+                if ((this.Maquina.Modo == Entidades.Enum.ModoMaquina.Normal &&
+                this.Maquina.CantidadCaja <= this.Maquina.CantidadCajaRealizada && !inactiva))
+                {
+                    PonerColorError();
+                    //Store.TCPCliente.EnviarMensaje(new MensajeTCPErrorPrensa { NombrePrensa = Maquina.Nombre, ParesFabricados = this.Maquina.CantidadCajaRealizada, ParesFabricar = this.Maquina.CantidadCaja });
+
+                    //ClienteMqtt.Publicar(string.Format("/{0}/pantalla/{1}/sobrepasado", Maquina.Tipo, ClienteMqtt.clientIp), string.Format("{0};{1}/{2};", Maquina.Nombre,this.Maquina.CantidadCajaRealizada, this.Maquina.CantidadCaja), 2);
+                }
+                else
+                {
+                    //Store.TCPCliente.EnviarMensaje(new MensajeTCPOkPrensa { NombrePrensa = Maquina.Nombre});
+
+                }
+
+                if (this.Maquina.CantidadCaja <= this.Maquina.CantidadCajaRealizada)
+                {
+                    ClienteMqtt.Publicar(string.Format("/{0}/pantalla/{1}/sobrepasado", Maquina.Tipo, ClienteMqtt.clientIp), string.Format("2;{0};{1}/{2}", Maquina.Nombre, this.Maquina.CantidadCajaRealizada, this.Maquina.CantidadCaja), 1);
+
+                    //Store.TCPCliente.EnviarMensaje(new MensajeTCPErrorPrensa { NombrePrensa = Maquina.Nombre, ParesFabricados = this.Maquina.CantidadCajaRealizada, ParesFabricar = this.Maquina.CantidadCaja });
+                }
+                else
+                {
+                    ClienteMqtt.Publicar(string.Format("/{0}/pantalla/{1}/desobrepasado", Maquina.Tipo, ClienteMqtt.clientIp), string.Format("3;{0};{1}/{2}", Maquina.Nombre, this.Maquina.CantidadCajaRealizada, this.Maquina.CantidadCaja), 1);
+
+                    //Store.TCPCliente.EnviarMensaje(new MensajeTCPOkPrensa { NombrePrensa = Maquina.Nombre });
+
+                }
             }
+            catch (Exception ex)
+            {
+                new Log().Escribir(ex);
+            }
+
+            
         }
 
         private void TimerInactividad_Tick(object sender, EventArgs e)
@@ -448,6 +488,7 @@ namespace MonitorWPF.Controles
 
         private void Maquina_OnInfoEjecucionActualizada(object sender, EventArgs e)
         {
+
             this.Notifica();
             this.inactiva = false; ;
             this.timerInactividad.Stop(); this.timerInactividad.Start();

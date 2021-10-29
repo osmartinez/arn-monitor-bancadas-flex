@@ -11,6 +11,7 @@ namespace Entidades.Util
     {
         public Guid Id { get; set; }
         public string Nombre { get; set; }
+        public string IdHandler { get; set; } = "default";
         public int IndiceIdTopic { get; set; }
         public int IndiceTipoBancada { get; set; }
         private event EventHandler<MqttMensajeRecibidoEventArgs> onMensajeRecibido;
@@ -42,6 +43,14 @@ namespace Entidades.Util
             this.QOS = qos;
         }
 
+        public Topic(string nombre, byte qos, string handler)
+        {
+            Id = Guid.NewGuid();
+            Nombre = nombre;
+            this.QOS = qos;
+            this.IdHandler = handler;
+        }
+
         public void MensajeRecibido(string cuerpo)
         {
             if (onMensajeRecibido != null)
@@ -53,7 +62,7 @@ namespace Entidades.Util
         public override bool Equals(object obj)
         {
             return obj is Topic topic &&
-                   Id.Equals(topic.Id);
+                   Nombre.Equals(topic.Nombre) && IdHandler.Equals(topic.IdHandler);
         }
     }
 }

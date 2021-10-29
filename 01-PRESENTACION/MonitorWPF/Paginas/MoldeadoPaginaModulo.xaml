@@ -27,7 +27,8 @@
             </Grid.RowDefinitions>
             <ctrl:NombreOperarioControl x:Name="ControlOperario" Margin="1"></ctrl:NombreOperarioControl>
             <ctrl:VueltasControl x:Name="ControlVueltas" Margin="1" Grid.Row="1"></ctrl:VueltasControl>
-            <ctrl:PrimaTiempoRealControl x:Name="ControlPrimaActual" Margin="1"  Grid.Row="2"></ctrl:PrimaTiempoRealControl>
+            <!--ctrl:PrimaTiempoRealControl x:Name="ControlPrimaActual" Margin="1"  Grid.Row="2"/-->
+            <ctrl:QRLocal x:Name="ControlQR" Margin="1"  Grid.Row="2"/>
             <ctrl:BotonLogoutControl x:Name="BtLogout" Grid.Row="3" Margin="1" ></ctrl:BotonLogoutControl>
         </Grid>
     </Grid>

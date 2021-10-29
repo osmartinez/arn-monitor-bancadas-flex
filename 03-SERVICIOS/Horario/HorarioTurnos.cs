@@ -65,5 +65,33 @@ namespace Horario
             }
             return turno;
         }
+
+        public static DateTime FechaInicioTurno
+        {
+            get
+            {
+                var fechaInicio = DateTime.Now;
+                var fechaFin = DateTime.Now;
+                CalcularHorarioTurno(Turno, DateTime.Now, out fechaInicio, out fechaFin);
+                return fechaInicio;
+            }
+        }
+        public static DateTime FechaFinTurno
+        {
+            get
+            {
+                var fechaInicio = DateTime.Now;
+                var fechaFin = DateTime.Now;
+                CalcularHorarioTurno(Turno, DateTime.Now, out fechaInicio, out fechaFin);
+                return fechaFin;
+            }
+        }
+        public static Turno Turno
+        {
+            get
+            {
+                return CalcularTurnoAFecha(DateTime.Now);
+            }
+        }
     }
 }

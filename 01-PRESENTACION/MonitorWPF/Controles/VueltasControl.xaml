@@ -11,11 +11,19 @@
             <Border.Effect>
                 <DropShadowEffect BlurRadius="15" Direction="-90" RenderingBias="Quality" Opacity=".2" ShadowDepth="1"/>
             </Border.Effect>
-            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <TextBlock Text="{Binding Vueltas}" TextWrapping="Wrap" HorizontalAlignment="Center"  TextTrimming="CharacterEllipsis"  FontSize="25" Foreground="White"></TextBlock>
-                <TextBlock Text="VUELTAS" TextWrapping="Wrap"  TextTrimming="CharacterEllipsis"  FontSize="25" Foreground="White"></TextBlock>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0"  Text="{Binding Vueltas}" Margin="0 0 0 5" VerticalAlignment="Bottom" TextWrapping="Wrap" HorizontalAlignment="Center"  TextTrimming="CharacterEllipsis"  FontSize="25" Foreground="White"></TextBlock>
+                <TextBlock Grid.Row="1" Text="VUELTAS" HorizontalAlignment="Center" TextWrapping="Wrap"  TextTrimming="CharacterEllipsis"  FontSize="25" Foreground="White"></TextBlock>
+                <Button Name="BtHojaProduccion" Margin="0 0 0 5" Click="BtHojaProduccion_Click" Grid.Row="2" Style="{StaticResource BotonNumeroLogin}">
+                    <TextBlock Name="TxtHojaProduccion" FontSize="19" Text="HOJA PRODUCCION"></TextBlock>
+                </Button>
+            </Grid>
 
-            </StackPanel>
         </Border>
 
     </Grid>

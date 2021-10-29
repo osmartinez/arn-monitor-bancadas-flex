@@ -41,7 +41,7 @@ namespace MonitorWPF.Paginas
             this.DataContext = this;
             this.BtLogout.OnPulsado += (s, e) =>
             {
-                foreach (var control in GridMaquinas.Children)
+                /*foreach (var control in GridMaquinas.Children)
                 {
                     var controlPrensa = control as PrensaGenericaControl;
                     if (controlPrensa != null)
@@ -49,6 +49,7 @@ namespace MonitorWPF.Paginas
                         controlPrensa.Desuscribir();
                     }
                 }
+                */
                 OperarioSale();
             };
 

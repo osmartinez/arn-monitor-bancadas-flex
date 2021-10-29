@@ -14,5 +14,7 @@ namespace Almacenamiento.Interfaces
         void GuardarControl(OperacionesControles control);
         OperacionesControles BuscarControl(int idOperacion, int tipo);
         List<MaquinasRegistrosDatos> ObtenerHistoricoParesOperario(int idOperario, string ipAutomata, int posicion, DateTime fechaIni, DateTime fechaFin);
+        List<MaquinasRegistrosDatos> ObtenerHistoricoParesOperario(int idOperario,  DateTime fechaIni, DateTime fechaFin);
+        List<OperacionesControles> ObtenerOperacionesControles();
     }
 }
